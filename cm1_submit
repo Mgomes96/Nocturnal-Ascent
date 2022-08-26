@@ -1,0 +1,54 @@
+#!/bin/tcsh
+
+#
+#  Example submission script for CM1 (using MPI) on NCAR's cheyenne
+#
+
+#-------------------------------------------
+# PBS stuff below this line
+
+# job name:
+#PBS -N cm1run
+
+# project code:
+#PBS -A <project_code>
+
+
+# below here, "select" is the number of 36-processor nodes to use.
+# note: this example uses 144 (=4*36) processors:
+# (do not change settings for "ncpus" or "mpiprocs" or "ompthreads")
+# for more info, see: https://arc.ucar.edu/knowledge_base/72581258
+
+#PBS -l select=3:ncpus=36:mpiprocs=36:ompthreads=1
+
+# maximum wall-clock time (hh:mm:ss)
+#PBS -l walltime=12:00:00
+
+# queue:
+#PBS -q regular
+
+# place stdout and stderr in same file:
+#PBS -j oe
+#PBS -k eod
+
+
+# PBS stuff above this line
+#-------------------------------------------
+# command-line stuff below this line
+
+
+# temp directory (if needed ... but probably not) 
+setenv TMPDIR /glade/scratch/$USER/temp
+mkdir -p $TMPDIR
+
+module load intel/19.0.5 mpt/2.22
+
+# load modules, if necessary
+# (here, default modules have been assumed, meaning intel fortran
+#  compiler and MPT on cheyenne)
+
+
+
+# run CM1
+setenv MPI_DSM_DISTRIBUTE yes
+mpiexec_mpt ./cm1.exe >&! cm1.print.out
