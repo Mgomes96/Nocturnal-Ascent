@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from netCDF4 import Dataset,num2date
 import datetime
-from myfunctions import maxmin
+#from myfunctions import maxmin
 
 
 
@@ -56,7 +56,7 @@ zparcel= vars['z'][:]
 #This part reads the output from the model
 
 
-rootgrp = Dataset('cm1out.nc','r')
+rootgrp = Dataset('/home/owner/Documents/LLJConvection/cm1model/mainRun3.nc','r')
 
 dims = rootgrp.dimensions
 
@@ -103,9 +103,9 @@ P= vars['prs'][:limit] #pressure
 # Bw = vars['wb_buoy'][:limit] #buoyancy in the CM1 w equation
 # hadvw = vars['wb_hadv'][:limit] #horizontal advection in the CM1 w equation
 # vadvw = vars['wb_vadv'][:limit] #vertical advection in the CM1 w equation
-# whturb = vars['wb_hturb'][:limit] #horizontal turbulence tendency in the CM1 w equation
-# wvturb = vars['wb_vturb'][:limit] #vertical turbulence tendency in the CM1 w equation
-# wrdamp = vars['wb_rdamp'][:limit] #rayleigh damping tendency in the CM1 w equation
+whturb = vars['wb_hturb'][:limit] #horizontal turbulence tendency in the CM1 w equation
+wvturb = vars['wb_vturb'][:limit] #vertical turbulence tendency in the CM1 w equation
+# # wrdamp = vars['wb_rdamp'][:limit] #rayleigh damping tendency in the CM1 w equation
 # hidiffw = vars['wb_hidiff'][:limit] #horizontal diffusion term in the w equation
 # vidiffw = vars['wb_vidiff'][:limit] #vertical diffusion term in the w equation
 
@@ -164,8 +164,11 @@ solrad= vars['swten'][:limit] #heating from shortwaves (K/s)
 #z0= vars['znt'][:limit] #surface roughness length
 qv= vars['qv'][:limit] #water vapor mixing ratio
 tke= vars['xkzm'][:limit] #subgrid tke
-#km= vars['kmh'][:limit] #subgrid eddy viscosity (eddy diffusivity for momentum)
-#kh= vars['khh'][:limit] #subgrid eddy diffusivity (eddy diffusivity for temperature)
+kmh= vars['kmh'][:limit] #subgrid horizontal eddy viscosity (eddy diffusivity for momentum)
+khh= vars['khh'][:limit] #subgrid horizontal eddy diffusivity (eddy diffusivity for temperature)
+kmv= vars['kmv'][:limit] #subgrid vertical eddy viscosity (eddy diffusivity for momentum)
+khv= vars['khv'][:limit] #subgrid vertical eddy diffusivity (eddy diffusivity for temperature)
+
 
 
 
@@ -202,6 +205,16 @@ for k in range(0,len(time)):
     time2.append(convert(time[k]+1800+86400))
 time2=np.array(time2)
 
+#making a day/night array
+daynight = np.ones_like(time2)
+for k in range(0,len(time2)):
+    if "6:30:0" in time2[k] or "7:30:0" in time2[k] or "8:30:0" in time2[k] or "9:30:0" in time2[k] or "10:30:0" in time2[k] or "11:30:0" in time2[k] or "12:30:0" in time2[k] or "13:30:0" in time2[k] or "14:30:0" in time2[k] or "15:30:0" in time2[k]:
+        daynight[k] = "\u263c"
+        #print(time2[k])
+    else:
+        daynight[k] = "\u263e"
+        
+
 #%%
 
 #Calculates the virtual potential temperature
@@ -227,6 +240,7 @@ time2=np.array(time2)
 #%%
 #Prints potential temperature profile
 plt.figure()
+plt.figtext(0.30, 0.90, "\u263c", fontsize='large', color='y', ha ='right')
 plt.rcParams.update({"font.size": 16})
 plt.plot(theta[0,:,0,0],z,linewidth=3,color='b')
 plt.xlabel('Potential temperature (K)',name='Arial',size=20,style='italic')
@@ -1349,12 +1363,13 @@ bwr_custom_thpert2 = custom_div_cmap2(30)
 #Animation of U or V winds, potential temperature and pressure (xz section)
 xm,zm=np.meshgrid(xh,z)
 
-for k in range(0,len(time)-0,1):
+for k in range(0,len(time)-105,1):
 
     
     fig=plt.figure(figsize=(10,10))
     plt.rcParams.update({"font.size": 16})
-    #fig.suptitle(time2[k],name='Arial',size=20)
+    fig.suptitle(time2[k],name='Arial',size=20)
+    plt.figtext(0.30, 0.90, daynight[k], fontsize='large', color='y', ha ='right')
     #plt.rcParams.update({"font.size": 16})
     #xposition = 0
     xposition = 328
@@ -2003,7 +2018,7 @@ for k in range(0,len(time)-0,1):
     plt.pause(0.5)
     nameoffigure = time2[k]
     string_in_string = "{}".format(nameoffigure)
-    plt.savefig(string_in_string)
+    plt.savefig("/home/owner/Documents/LLJConvection/cm1model/figures/"+string_in_string)
     plt.close()
     
     
@@ -2028,3 +2043,4 @@ for k in range(0,len(time)-0,1):
 
 
  
+
