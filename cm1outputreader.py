@@ -1063,26 +1063,31 @@ for k in range(0,len(maxtime2)):
     zplot2.append(z[maxheight2[k]]) 
     
 
-maxintensity2.insert(0,0.05)
-zplot2.insert(0,0.020000001)
+maxintensity2.insert(0,0.04)
+zplot2.insert(0,0.000000001)
 maxtime2.insert(0,0)
 
+time2plot3 = np.ones_like(time2plot2)
+for k in range(0,len(time2plot2)):
+    time2plot3[k] = time2plot2[k][9:len(time2plot2[k])]
 
 fig,ax1=plt.subplots()
 plt.rcParams.update({"font.size": 16})
-plt.xticks(maxtime2[1:len(maxtime2):4], time2plot2[0:len(time2plot2):4], rotation='vertical')
+#plt.xticks(maxtime2[1:len(maxtime2):8], time2plot2[0:len(time2plot2):8], rotation='vertical')
+plt.xticks(maxtime2[1:len(maxtime2):6], time2plot3[0:len(time2plot3):6], rotation='vertical')
 plt.gcf().autofmt_xdate()
 plt.plot(maxtime2,zplot2,zorder=1)
 plt.scatter(maxtime2,zplot2,c=maxintensity2,s=60,cmap='Spectral_r',zorder=2)
 cbar=plt.colorbar()
 cbar.ax.tick_params(labelsize=20)
-cbar.set_label(u'Peak w intensity ($ms^{-1}$)',size=20,style='italic')
+cbar.set_label(r'Peak w intensity (m $\rms^{-1}$)',size=20)
 #ax1.set_ylim([0,3])
 #plt.xlabel('hi',name='Arial',weight='bold',size=20,style='italic')
-plt.ylabel('Peak height (km)',name='Arial',size=20,style='italic')
+plt.ylabel('Peak height (km)',name='Arial',size=20)
 ax1.set_xlim([0,timesteps-1])
 ax1.set_ylim([0,4])
 plt.grid(True)
+plt.show()
     
 #%%    
 
