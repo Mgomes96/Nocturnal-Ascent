@@ -1054,7 +1054,7 @@ maxheight = 166
 for k in range(0,timesteps):
     maxtime2.append(k)
     maxheight2.append(np.where(w[k,0:maxheight,:,:] == np.amax(w[k,0:maxheight,:,:]))[0][0])
-    maxintensity2.append(np.amax(w[k,:,:,:]))
+    maxintensity2.append(100*np.amax(w[k,:,:,:]))
 
 time2plot2=[]
 zplot2 =[]    
@@ -1063,7 +1063,7 @@ for k in range(0,len(maxtime2)):
     zplot2.append(z[maxheight2[k]]) 
     
 
-maxintensity2.insert(0,0.04)
+maxintensity2.insert(0,4)
 zplot2.insert(0,0.000000001)
 maxtime2.insert(0,0)
 
@@ -1080,7 +1080,7 @@ plt.plot(maxtime2,zplot2,zorder=1)
 plt.scatter(maxtime2,zplot2,c=maxintensity2,s=60,cmap='Spectral_r',zorder=2)
 cbar=plt.colorbar()
 cbar.ax.tick_params(labelsize=20)
-cbar.set_label(r'Peak w intensity (m $\rms^{-1}$)',size=20)
+cbar.set_label(r'Peak w intensity (cm $\rms^{-1}$)',size=20)
 #ax1.set_ylim([0,3])
 #plt.xlabel('hi',name='Arial',weight='bold',size=20,style='italic')
 plt.ylabel('Peak height (km)',name='Arial',size=20)
@@ -1378,7 +1378,7 @@ for k in range(0,len(time)-defasagem,1):
     fig=plt.figure(figsize=(20,20))
     plt.rcParams.update({"font.size": 16})
     fig.suptitle(time2[k],name='Arial',size=20)
-    plt.figtext(0.30, 0.955, daynight[k], fontsize=25, color=blackyellow[k], ha ='right')
+    plt.figtext(0.30, 0.955, daynight[k], fontsize=50, color=blackyellow[k], ha ='right')
     #plt.rcParams.update({"font.size": 16})
     #xposition = 0
     xposition = 328
@@ -1578,8 +1578,8 @@ for k in range(0,len(time)-defasagem,1):
     # ax.set_ylim([0,5])
     
     ax=fig.add_subplot(2,2,4)
-    plt.plot(upblten[k,:,0,xposition],z,label='PBL tendency')
-    plt.plot(fcoru[k,:,0,xposition] - initPGF[k,:,0,xposition],z,label='Coriolis minus base PGF')
+    plt.plot(upblten[k,:,0,xposition],z,label='Turbulence')
+    plt.plot(fcoru[k,:,0,xposition] - initPGF[k,:,0,xposition],z,label='Coriolis minus free-atmosphere PGF')
     plt.plot(PGFpertuPi[k,:,0,xposition],z,label='Perturbation PGF')
     plt.plot(urdamp[k,:,0,xposition],z,label='Rayleigh Damping')
     plt.plot(hadvu[k,:,0,xposition],z,label='Horizontal advection')
@@ -1596,8 +1596,8 @@ for k in range(0,len(time)-defasagem,1):
     plt.grid(True)
     
     ax=fig.add_subplot(2,2,3)
-    plt.plot(upblten[k,:,0,xposition2],z,label='PBL tendency')
-    plt.plot(fcoru[k,:,0,xposition2] - initPGF[k,:,0,xposition],z,label='Coriolis minus base PGF')
+    plt.plot(upblten[k,:,0,xposition2],z,label='Turbulence')
+    plt.plot(fcoru[k,:,0,xposition2] - initPGF[k,:,0,xposition],z,label='Coriolis minus free-atmosphere PGF')
     plt.plot(PGFpertuPi[k,:,0,xposition2],z,label='Perturbation PGF')
     plt.plot(urdamp[k,:,0,xposition],z,label='Rayleigh Damping')
     plt.plot(hadvu[k,:,0,xposition2],z,label='Horizontal advection')
