@@ -56,7 +56,7 @@ zparcel= vars['z'][:]
 #This part reads the output from the model
 
 
-rootgrp = Dataset('/home/owner/Documents/LLJConvection/cm1model/mainRun3.nc','r')
+rootgrp = Dataset('/home/owner/Documents/LLJConvection/cm1model/cm1out_short.nc','r')
 
 dims = rootgrp.dimensions
 
@@ -256,11 +256,11 @@ plt.grid('True')
 #Prints mixing ratio profile
 plt.figure()
 plt.rcParams.update({"font.size": 16})
-plt.plot(qv[0,:,0,0],z,linewidth=3,color='b')
+plt.plot(qv[0,:,0,0],z,linewidth=3,color='r')
 plt.xlabel('Water vapor mixing ratio ($kgkg^{-1}$)',name='Arial',size=20,style='italic')
 plt.ylabel('Height (km)',name='Arial',size=20,style='italic')
 plt.ylim([0,14])
-plt.xlim([0,0.001])
+plt.xlim([0,0.016])
 plt.grid('True')
 
 
@@ -918,6 +918,159 @@ plt.xlabel('X Domain (km)',name='Arial',size=20,style='italic')
 #f.close() 
 
 
+
+#%%
+#Creates a sounding for cm1
+
+#Test lists only
+#p0 = 1000.0
+#
+#theta0 = 299.0
+#
+#mixratio0 = 11.0
+#
+#z = np.array([100.0,200.0,300.0,400.0,500.0,600.0,700.0,800.0])
+#
+#theta = np.array([300.0,301.4,307.2,310.0,314.3,320.1,323.1,330.9])
+#
+#mixratio = np.array([10.0,8.0,7.8,7.2,8.0,1.0,0.5,0.2,0.1])
+#
+#uwnd = np.array([0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0])
+#
+#vwnd = np.array([10.0,10.0,10.0,10.0,10.0,10.0,10.0,10.0,10.0])
+#
+#
+#
+#f = open('input_sounding.txt', 'w' )
+#
+#f.write(str(p0)+ '     '+ str(theta0)+ '     ' + str(mixratio0) + '     ' + '\n')
+#
+#for k in range(0,len(theta)):
+#    f.write(str(z[k]) + '     ' + str(theta[k]) + '     ' + str(mixratio[k]) + '     ' + str(uwnd[k]) + '     ' + str(vwnd[k]) + '\n'  )
+#
+#
+#f.close() 
+
+
+
+#This code reads and plots the data from a cm1 sounding 
+import re
+
+f = open('/home/owner/Documents/LLJConvection/cm1model/input_sounding', 'r' )
+r = f.readlines()
+
+f.close()
+
+for k in range(0,len(r)):
+    r[k] = re.sub('\s+', ' ', r[k])
+    r[k] = r[k].split(' ')
+    
+    
+p0 = float(r[0][1])
+
+theta0 = float(r[0][2])
+
+mixratio0 = float(r[0][3])
+
+z=[]
+theta=[]
+mixratio=[]
+uwnd=[]
+vwnd=[]
+
+
+for k in range(1,len(r)):
+    z.append(float(r[k][1]))
+    theta.append(float(r[k][2]))
+    mixratio.append(float(r[k][3]))
+    uwnd.append(float(r[k][4]))
+    vwnd.append(float(r[k][5]))
+    
+    
+#plt.plot(theta,z)
+plt.plot(mixratio,z)
+
+
+#Generating a "fake" theta profile
+thetaexp = list(np.ones_like(theta)*[0])
+
+##Using linear function
+#for k in range(0,len(thetaexp)):
+#    thetaexp[k] = z[k] * 0.004 + 300
+
+
+#Using exponential function
+for k in range(0,len(thetaexp)):
+    thetaexp[k] = 300 * np.exp(z[k]/75000) + np.exp((z[k]-2000)/3200)
+
+#Using another exponential function
+#for k in range(0,len(thetaexp)):
+#    thetaexp[k] = 600 - 300 * np.exp(-(1.0/(30000.0**2))*(z[k]-0.0)**2)
+    
+#plt.plot(thetaexp,z)
+
+
+#Multiplying the mixingratio by a certain number
+#mixratio = list(np.array(mixratio)*6)
+#mixratio0 = mixratio0*6
+
+#CHanging the low level moisture
+mixratio = np.array(mixratio)
+for k in range(0,len(mixratio)):
+    if k < 15:
+        mixratio[k] = mixratio[k]*6
+mixratio0 = mixratio0*6
+plt.plot(mixratio,z)
+plt.show()
+mixratio = list(mixratio)
+
+
+    
+
+#Creating new arrays to alow for creating the new sounding
+
+
+for k in range(0,len(z)):
+    while len(str(z[k])) < 20:
+        z[k] = str(z[k]) + ' '
+    
+    while len(str(thetaexp[k])) < 20:
+        thetaexp[k] = str(thetaexp[k]) + ' '
+        
+    while len(str(theta[k])) < 20:
+        theta[k] = str(theta[k]) + ' '
+        
+    while len(str(mixratio[k])) < 30:
+        mixratio[k] = str(mixratio[k]) + ' '
+        
+    while len(str(uwnd[k])) < 20:
+        uwnd[k] = str(uwnd[k]) + ' '
+        
+    while len(str(vwnd[k])) < 20:
+        vwnd[k] = str(vwnd[k]) + ' '
+        
+
+        
+        
+#writing the new sounding 
+f = open('/home/owner/Documents/LLJConvection/cm1model/input_sounding_new', 'w' )
+
+f.write(str(p0)+ '     '+ str(theta0)+ '     ' + str(mixratio0) + '     ' + '\n')
+
+for k in range(0,len(z)):
+    f.write(z[k]  + theta[k] + mixratio[k] + uwnd[k]  + vwnd[k] + '\n'  )
+
+
+f.close() 
+
+#%%
+
+
+
+
+
+
+
 #############################################################################
 
 
@@ -1369,16 +1522,16 @@ bwr_custom_thpert2 = custom_div_cmap2(30)
     
 
 #Animation of U or V winds, potential temperature and pressure (xz section)
-defasagem = 0
+defasagem = 10
 xm,zm=np.meshgrid(xh,z)
 
 for k in range(0,len(time)-defasagem,1):
 
     
-    fig=plt.figure(figsize=(20,20))
+    fig=plt.figure(figsize=(10,10))
     plt.rcParams.update({"font.size": 16})
     fig.suptitle(time2[k],name='Arial',size=20)
-    plt.figtext(0.30, 0.955, daynight[k], fontsize=50, color=blackyellow[k], ha ='right')
+    plt.figtext(0.30, 0.940, daynight[k], fontsize=50, color=blackyellow[k], ha ='right')
     #plt.rcParams.update({"font.size": 16})
     #xposition = 0
     xposition = 328
@@ -1414,18 +1567,18 @@ for k in range(0,len(time)-defasagem,1):
     # ax.set_xlim([-1000,1000])
     # ax.set_ylim([0,7])
     
-    # ax=fig.add_subplot(2,1,1)
-    # plt.contourf(xm,zm,dudx[k,:,0,:-1],np.arange(-0.2,0.205,0.005),cmap='seismic')
-    # #plt.pcolormesh(xm,zm,dudx[k,:,0,:-1],cmap='seismic',vmin=-0.3, vmax=0.3)
-    # #plt.contourf(xm,zh[0,:,0,:]/1000.0,dudx[k,:,0,:-1],np.arange(-0.2,0.205,0.005),cmap='seismic')
-    # plt.colorbar(label='Divergence ($s^{-1}$)')
-    # #plt.title(time2[k] + '     ' +str(int(solrad[k,0,0])) ,name='Arial',weight='bold',size=20)
-    # #plt.title(time2[k],name='Arial',weight='bold',size=20)
-    # plt.xlabel('X Domain (km)',name='Arial',size=16,style='italic')
-    # plt.ylabel('Height (km)',name='Arial',size=16,style='italic')
-    # #ax.set_xlim([-2968,2968])
-    # ax.set_xlim([-2000,2000])
-    # ax.set_ylim([0,7])
+    ax=fig.add_subplot(1,1,1)
+    plt.contourf(xm,zm,dudx[k,:,0,:-1],np.arange(-0.2,0.205,0.005),cmap='seismic')
+    #plt.pcolormesh(xm,zm,dudx[k,:,0,:-1],cmap='seismic',vmin=-0.3, vmax=0.3)
+    #plt.contourf(xm,zh[0,:,0,:]/1000.0,dudx[k,:,0,:-1],np.arange(-0.2,0.205,0.005),cmap='seismic')
+    plt.colorbar(label='Divergence ($s^{-1}$)')
+    #plt.title(time2[k] + '     ' +str(int(solrad[k,0,0])) ,name='Arial',weight='bold',size=20)
+    #plt.title(time2[k],name='Arial',weight='bold',size=20)
+    plt.xlabel('X Domain (km)',name='Arial',size=16,style='italic')
+    plt.ylabel('Height (km)',name='Arial',size=16,style='italic')
+    #ax.set_xlim([-2968,2968])
+    ax.set_xlim([-2000,2000])
+    ax.set_ylim([0,7])
 
     # ax=fig.add_subplot(2,1,1)
     # #plt.contourf(xm,zm,thpert[k,:,0,:],np.arange(-10,10.5,0.5),cmap='seismic')
@@ -1522,27 +1675,27 @@ for k in range(0,len(time)-defasagem,1):
 # #    ax.set_xlim([-2968,2968])
     
     
-    ax=fig.add_subplot(2,2,2)
-    plt.plot(u[k,:,0,xposition],z)
-    #plt.title(time2[k] + '     ' +str(int(solrad[k,0,0])) ,name='Arial',weight='bold',size=20)
-    # plt.title(time2[k],name='Arial',size=20)
-    plt.xlabel(r'U wind (m $\rms^{-1}$)',name='Arial',size=16)
-    plt.ylabel('Height (km)',name='Arial',size=16)
-    ax.set_xlim([-10,20])
-    ax.set_ylim([0,4])
-    plt.grid(True)
-    
-    
-    ax=fig.add_subplot(2,2,1)
-    plt.plot(u[k,:,0,xposition2],z)
-    #plt.title(time2[k] + '     ' +str(int(solrad[k,0,0])) ,name='Arial',weight='bold',size=20)
-    plt.xlabel(r'U wind (m $\rms^{-1}$)',name='Arial',size=16)
-    plt.ylabel('Height (km)',name='Arial',size=16)
-    ax.set_xlim([-10,20])
-    ax.set_ylim([0,4])
-    plt.grid(True)
-    
     # ax=fig.add_subplot(2,2,2)
+    # plt.plot(u[k,:,0,xposition],z)
+    # #plt.title(time2[k] + '     ' +str(int(solrad[k,0,0])) ,name='Arial',weight='bold',size=20)
+    # # plt.title(time2[k],name='Arial',size=20)
+    # plt.xlabel(r'U wind (m $\rms^{-1}$)',name='Arial',size=16)
+    # plt.ylabel('Height (km)',name='Arial',size=16)
+    # ax.set_xlim([-10,20])
+    # ax.set_ylim([0,4])
+    # plt.grid(True)
+    
+    
+    # ax=fig.add_subplot(2,2,1)
+    # plt.plot(u[k,:,0,xposition2],z)
+    # #plt.title(time2[k] + '     ' +str(int(solrad[k,0,0])) ,name='Arial',weight='bold',size=20)
+    # plt.xlabel(r'U wind (m $\rms^{-1}$)',name='Arial',size=16)
+    # plt.ylabel('Height (km)',name='Arial',size=16)
+    # ax.set_xlim([-10,20])
+    # ax.set_ylim([0,4])
+    # plt.grid(True)
+    
+    # ax=fig.add_subplot(2,1,2)
     # plt.plot(v[k,:,0,xposition],z)
     # #plt.title(time2[k] + '     ' +str(int(solrad[k,0,0])) ,name='Arial',weight='bold',size=20)
     # plt.xlabel(r'V wind (m $\rms^{-1}$)',name='Arial',size=16)
@@ -1577,41 +1730,41 @@ for k in range(0,len(time)-defasagem,1):
     # ax.set_xlim([-0.0015,0.0015])
     # ax.set_ylim([0,5])
     
-    ax=fig.add_subplot(2,2,4)
-    plt.plot(upblten[k,:,0,xposition],z,label='Turbulence')
-    plt.plot(fcoru[k,:,0,xposition] - initPGF[k,:,0,xposition],z,label='Coriolis minus free-atmosphere PGF')
-    plt.plot(PGFpertuPi[k,:,0,xposition],z,label='Perturbation PGF')
-    plt.plot(urdamp[k,:,0,xposition],z,label='Rayleigh Damping')
-    plt.plot(hadvu[k,:,0,xposition],z,label='Horizontal advection')
-    plt.plot(vadvu[k,:,0,xposition],z,label='Vertical advection')
-    plt.plot(uidiff[k,:,0,xposition],z,label='Artificial Diffusion')
-    # plt.plot(uhturb[k,:,0,xposition],z,label='Horizontal Turbulence')
-    # plt.plot(uvturb[k,:,0,xposition],z,label='Vertical Turbulence')
-    #plt.legend(fontsize=10)
-    #plt.title(time2[k] + '     ' +str(int(solrad[k,0,0])) ,name='Arial',weight='bold',size=20)
-    plt.xlabel(r'Terms in the U equation of motion (m $\rms^{-2}$)',name='Arial',size=16)
-    plt.ylabel('Height (km)',name='Arial',size=16)
-    ax.set_xlim([-0.0015,0.0015])
-    ax.set_ylim([0,4])
-    plt.grid(True)
+    # ax=fig.add_subplot(2,2,4)
+    # plt.plot(upblten[k,:,0,xposition],z,label='Turbulence')
+    # plt.plot(fcoru[k,:,0,xposition] - initPGF[k,:,0,xposition],z,label='Coriolis minus free-atmosphere PGF')
+    # plt.plot(PGFpertuPi[k,:,0,xposition],z,label='Perturbation PGF')
+    # plt.plot(urdamp[k,:,0,xposition],z,label='Rayleigh Damping')
+    # plt.plot(hadvu[k,:,0,xposition],z,label='Horizontal advection')
+    # plt.plot(vadvu[k,:,0,xposition],z,label='Vertical advection')
+    # plt.plot(uidiff[k,:,0,xposition],z,label='Artificial Diffusion')
+    # # plt.plot(uhturb[k,:,0,xposition],z,label='Horizontal Turbulence')
+    # # plt.plot(uvturb[k,:,0,xposition],z,label='Vertical Turbulence')
+    # #plt.legend(fontsize=10)
+    # #plt.title(time2[k] + '     ' +str(int(solrad[k,0,0])) ,name='Arial',weight='bold',size=20)
+    # plt.xlabel(r'Terms in the U equation of motion (m $\rms^{-2}$)',name='Arial',size=16)
+    # plt.ylabel('Height (km)',name='Arial',size=16)
+    # ax.set_xlim([-0.0015,0.0015])
+    # ax.set_ylim([0,4])
+    # plt.grid(True)
     
-    ax=fig.add_subplot(2,2,3)
-    plt.plot(upblten[k,:,0,xposition2],z,label='Turbulence')
-    plt.plot(fcoru[k,:,0,xposition2] - initPGF[k,:,0,xposition],z,label='Coriolis minus free-atmosphere PGF')
-    plt.plot(PGFpertuPi[k,:,0,xposition2],z,label='Perturbation PGF')
-    plt.plot(urdamp[k,:,0,xposition],z,label='Rayleigh Damping')
-    plt.plot(hadvu[k,:,0,xposition2],z,label='Horizontal advection')
-    plt.plot(vadvu[k,:,0,xposition2],z,label='Vertical advection')
-    plt.plot(uidiff[k,:,0,xposition2],z,label='Artificial Diffusion')
-    # plt.plot(uhturb[k,:,0,xposition],z,label='Horizontal Turbulence')
-    # plt.plot(uvturb[k,:,0,xposition],z,label='Vertical Turbulence')
-    #plt.legend(fontsize=10)
-    #plt.title(time2[k] + '     ' +str(int(solrad[k,0,0])) ,name='Arial',weight='bold',size=20)
-    plt.xlabel(r'Terms in the U equation of motion (m $\rms^{-2}$)',name='Arial',size=16)
-    plt.ylabel('Height (km)',name='Arial',size=16)
-    ax.set_xlim([-0.0015,0.0015])
-    ax.set_ylim([0,4])
-    plt.grid(True)
+    # ax=fig.add_subplot(2,2,3)
+    # plt.plot(upblten[k,:,0,xposition2],z,label='Turbulence')
+    # plt.plot(fcoru[k,:,0,xposition2] - initPGF[k,:,0,xposition],z,label='Coriolis minus free-atmosphere PGF')
+    # plt.plot(PGFpertuPi[k,:,0,xposition2],z,label='Perturbation PGF')
+    # plt.plot(urdamp[k,:,0,xposition],z,label='Rayleigh Damping')
+    # plt.plot(hadvu[k,:,0,xposition2],z,label='Horizontal advection')
+    # plt.plot(vadvu[k,:,0,xposition2],z,label='Vertical advection')
+    # plt.plot(uidiff[k,:,0,xposition2],z,label='Artificial Diffusion')
+    # # plt.plot(uhturb[k,:,0,xposition],z,label='Horizontal Turbulence')
+    # # plt.plot(uvturb[k,:,0,xposition],z,label='Vertical Turbulence')
+    # #plt.legend(fontsize=10)
+    # #plt.title(time2[k] + '     ' +str(int(solrad[k,0,0])) ,name='Arial',weight='bold',size=20)
+    # plt.xlabel(r'Terms in the U equation of motion (m $\rms^{-2}$)',name='Arial',size=16)
+    # plt.ylabel('Height (km)',name='Arial',size=16)
+    # ax.set_xlim([-0.0015,0.0015])
+    # ax.set_ylim([0,4])
+    # plt.grid(True)
     
     
     # ax=fig.add_subplot(2,2,4)
