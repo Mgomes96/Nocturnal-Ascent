@@ -1015,14 +1015,34 @@ for k in range(0,len(thetaexp)):
 #mixratio0 = mixratio0*6
 
 #CHanging the low level moisture
+# mixratio = np.array(mixratio)
+# for k in range(0,len(mixratio)):
+#     if k < 15:
+#         mixratio[k] = mixratio[k]*6
+# mixratio0 = mixratio0*6
+
+# mixratio = np.array(mixratio)
+# for k in range(0,len(mixratio)):
+#     mixratio[k] = 1 * np.exp(abs(z[k]-14200)/27000) - 1 #+ np.exp((abs(z[k]-14000)-14000)/3200)
+# mixratio0 = mixratio[0]
+
 mixratio = np.array(mixratio)
 for k in range(0,len(mixratio)):
-    if k < 15:
-        mixratio[k] = mixratio[k]*6
-mixratio0 = mixratio0*6
+    if z[k] < 3050:
+        mixratio[k] = 0.5
+    else:
+        mixratio[k] = 1 * np.exp(abs(z[k]-14200)/27000) - 1 #+ np.exp((abs(z[k]-14000)-14000)/3200)
+mixratio0 = mixratio[0]
+
+
+
+
 plt.plot(mixratio,z)
 plt.show()
 mixratio = list(mixratio)
+
+
+
 
 
     
