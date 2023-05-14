@@ -56,7 +56,7 @@ zparcel= vars['z'][:]
 #This part reads the output from the model
 
 
-rootgrp = Dataset('/home/owner/Documents/LLJConvection/cm1model/cm1out_short.nc','r')
+rootgrp = Dataset('/home/owner/Documents/LLJConvection/cm1model/cm1out.nc','r')
 
 dims = rootgrp.dimensions
 
@@ -799,6 +799,82 @@ plt.ylabel('V wind ($ms^{-1}$)',name='Arial',size=18,style='italic')
 #plt.ylim([5,14])
 plt.legend(loc = 1)
 plt.grid(True)
+
+#%%
+
+#Plots the u and v wind ratio with time at a certain heights (better version)
+plt.rcParams.update({"font.size": 16})
+plt.figure(figsize=(20,20))
+xposition = 0
+init_time = 0  
+final_time = 130  
+sunrise_time = 53  #was 54 for old 40km run
+zposition1 = 44 #height1  was 19 for old 40km run
+zposition2 = 94 #height2  was 44 for old 40km run
+
+
+# x = u[init_time:final_time + 1,zposition1,0,xposition]
+# y = v[init_time:final_time + 1,zposition1,0,xposition]
+
+# plt.quiver(x[:-1], y[:-1], x[1:]-x[:-1], y[1:]-y[:-1], scale_units='xy', angles='xy', scale=1, color="k")
+
+#-----------------------------------------------------------------------
+init_time1 = 0  
+final_time1 = 23 
+
+x1 = u[init_time1:final_time1 + 1,zposition1,0,xposition]
+y1 = v[init_time1:final_time1 + 1,zposition1,0,xposition]
+plt.quiver(x1[:-1], y1[:-1], x1[1:]-x1[:-1], y1[1:]-y1[:-1], scale_units='xy', angles='xy', scale=1, color="k",label="Day1")
+
+#----------------------------------------------------------------------
+init_time2 = 23  
+final_time2 = 47 
+
+x2 = u[init_time2:final_time2 + 1,zposition1,0,xposition]
+y2 = v[init_time2:final_time2 + 1,zposition1,0,xposition]
+plt.quiver(x2[:-1], y2[:-1], x2[1:]-x2[:-1], y2[1:]-y2[:-1], scale_units='xy', angles='xy', scale=1, color="blue",label="Day2")
+
+#----------------------------------------------------------------------
+init_time3 = 47  
+final_time3 = 71 
+
+x3 = u[init_time3:final_time3 + 1,zposition1,0,xposition]
+y3 = v[init_time3:final_time3 + 1,zposition1,0,xposition]
+plt.quiver(x3[:-1], y3[:-1], x3[1:]-x3[:-1], y3[1:]-y3[:-1], scale_units='xy', angles='xy', scale=1, color="red",label="Day3")
+
+#----------------------------------------------------------------------
+init_time4 = 71  
+final_time4 = 95 
+
+x4 = u[init_time4:final_time4 + 1,zposition1,0,xposition]
+y4 = v[init_time4:final_time4 + 1,zposition1,0,xposition]
+plt.quiver(x4[:-1], y4[:-1], x4[1:]-x4[:-1], y4[1:]-y4[:-1], scale_units='xy', angles='xy', scale=1, color="yellow",label="Day4")
+
+#----------------------------------------------------------------------
+init_time5 = 95  
+final_time5 = 111 
+
+x5 = u[init_time5:final_time5 + 1,zposition1,0,xposition]
+y5 = v[init_time5:final_time5 + 1,zposition1,0,xposition]
+plt.quiver(x5[:-1], y5[:-1], x5[1:]-x5[:-1], y5[1:]-y5[:-1], scale_units='xy', angles='xy', scale=1, color="green",label="Day5")
+
+
+
+plt.plot([0],[10],label='Geostrophic wind',color='white',marker='*',markersize=25,markerfacecolor='y')
+plt.xlabel('U wind ($ms^{-1}$)',name='Arial',size=18,style='italic')
+plt.ylabel('V wind ($ms^{-1}$)',name='Arial',size=18,style='italic')
+# plt.xlim([-5,5])
+# plt.ylim([5,15])
+plt.axis('equal')
+
+#plt.xlim([-4,4])
+#plt.ylim([5,14])
+plt.legend(loc = 1)
+plt.grid(True)
+
+
+
+
 #%%   
 
 ############################################################################## 
@@ -1021,17 +1097,9 @@ for k in range(0,len(thetaexp)):
 #         mixratio[k] = mixratio[k]*6
 # mixratio0 = mixratio0*6
 
-# mixratio = np.array(mixratio)
-# for k in range(0,len(mixratio)):
-#     mixratio[k] = 1 * np.exp(abs(z[k]-14200)/27000) - 1 #+ np.exp((abs(z[k]-14000)-14000)/3200)
-# mixratio0 = mixratio[0]
-
 mixratio = np.array(mixratio)
 for k in range(0,len(mixratio)):
-    if z[k] < 3050:
-        mixratio[k] = 0.5
-    else:
-        mixratio[k] = 1 * np.exp(abs(z[k]-14200)/27000) - 1 #+ np.exp((abs(z[k]-14000)-14000)/3200)
+    mixratio[k] = 1 * np.exp(abs(z[k]-14200)/37000) - 1 #+ np.exp((abs(z[k]-14000)-14000)/3200)
 mixratio0 = mixratio[0]
 
 
