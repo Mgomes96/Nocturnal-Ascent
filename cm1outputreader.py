@@ -49,9 +49,14 @@ yparcel= vars['y'][:]
 zparcel= vars['z'][:]
 
 
-
+#%%
 ########################################################################################################################
-
+#from mpl_toolkits.basemap import Basemap
+import matplotlib.pyplot as plt
+import numpy as np
+from netCDF4 import Dataset,num2date
+import datetime
+#from myfunctions import maxmin
 
 #This part reads the output from the model
 
@@ -103,31 +108,31 @@ P= vars['prs'][:limit] #pressure
 # Bw = vars['wb_buoy'][:limit] #buoyancy in the CM1 w equation
 # hadvw = vars['wb_hadv'][:limit] #horizontal advection in the CM1 w equation
 # vadvw = vars['wb_vadv'][:limit] #vertical advection in the CM1 w equation
-whturb = vars['wb_hturb'][:limit] #horizontal turbulence tendency in the CM1 w equation
-wvturb = vars['wb_vturb'][:limit] #vertical turbulence tendency in the CM1 w equation
+# whturb = vars['wb_hturb'][:limit] #horizontal turbulence tendency in the CM1 w equation
+# wvturb = vars['wb_vturb'][:limit] #vertical turbulence tendency in the CM1 w equation
 # # wrdamp = vars['wb_rdamp'][:limit] #rayleigh damping tendency in the CM1 w equation
 # hidiffw = vars['wb_hidiff'][:limit] #horizontal diffusion term in the w equation
 # vidiffw = vars['wb_vidiff'][:limit] #vertical diffusion term in the w equation
 
-PGFpertuPi = vars['ub_pgrad'][:limit] #pressure gradient term in the CM1 u equation
-fcoru = vars['ub_cor'][:limit] #coriolis term in the CM1 u equation
-urdamp = vars['ub_rdamp'][:limit] #rayleigh damping term in the CM1 u equation
-hadvu = vars['ub_hadv'][:limit] #horizontal advection in the CM1 u equation
-vadvu = vars['ub_vadv'][:limit] #vertical advection in the CM1 u equation
-uhturb = vars['ub_hturb'][:limit] #horizontal turbulence tendency in the CM1 u equation
-uvturb = vars['ub_vturb'][:limit] #vertical turbulence tendency in the CM1 u equation
-upblten = vars['ub_pbl'][:limit] #pbl tendency in the CM1 u equation
-uidiff = vars['ub_hidiff'][:limit] #Diffusion (incuding artificial) in the CM1 u equation
+# PGFpertuPi = vars['ub_pgrad'][:limit] #pressure gradient term in the CM1 u equation
+# fcoru = vars['ub_cor'][:limit] #coriolis term in the CM1 u equation
+# urdamp = vars['ub_rdamp'][:limit] #rayleigh damping term in the CM1 u equation
+# hadvu = vars['ub_hadv'][:limit] #horizontal advection in the CM1 u equation
+# vadvu = vars['ub_vadv'][:limit] #vertical advection in the CM1 u equation
+# uhturb = vars['ub_hturb'][:limit] #horizontal turbulence tendency in the CM1 u equation
+# uvturb = vars['ub_vturb'][:limit] #vertical turbulence tendency in the CM1 u equation
+# upblten = vars['ub_pbl'][:limit] #pbl tendency in the CM1 u equation
+# uidiff = vars['ub_hidiff'][:limit] #Diffusion (incuding artificial) in the CM1 u equation
 
-PGFpertvPi = vars['vb_pgrad'][:limit] #pressure gradient term in the CM1 v equation
-fcorv = vars['vb_cor'][:limit] #coriolis term in the CM1 v equation
-vrdamp = vars['vb_rdamp'][:limit] #rayleigh damping term in the CM1 v equation
-hadvv = vars['vb_hadv'][:limit] #horizontal advection in the CM1 v equation
-vadvv = vars['vb_vadv'][:limit] #vertical advection in the CM1 v equation
-vhturb = vars['vb_hturb'][:limit] #horizontal turbulence tendency in the CM1 v equation
-vvturb = vars['vb_vturb'][:limit] #vertical turbulence tendency in the CM1 v equation
-vpblten = vars['vb_pbl'][:limit] #pbl tendency in the CM1 v equation
-vidiff = vars['vb_hidiff'][:limit] #Diffusion (incuding artificial) in the CM1 v equation
+# PGFpertvPi = vars['vb_pgrad'][:limit] #pressure gradient term in the CM1 v equation
+# fcorv = vars['vb_cor'][:limit] #coriolis term in the CM1 v equation
+# vrdamp = vars['vb_rdamp'][:limit] #rayleigh damping term in the CM1 v equation
+# hadvv = vars['vb_hadv'][:limit] #horizontal advection in the CM1 v equation
+# vadvv = vars['vb_vadv'][:limit] #vertical advection in the CM1 v equation
+# vhturb = vars['vb_hturb'][:limit] #horizontal turbulence tendency in the CM1 v equation
+# vvturb = vars['vb_vturb'][:limit] #vertical turbulence tendency in the CM1 v equation
+# vpblten = vars['vb_pbl'][:limit] #pbl tendency in the CM1 v equation
+# vidiff = vars['vb_hidiff'][:limit] #Diffusion (incuding artificial) in the CM1 v equation
 
 
 xh= vars['xh'][:] #x coordinate
@@ -162,12 +167,12 @@ solrad= vars['swten'][:limit] #heating from shortwaves (K/s)
 #lu0= vars['lu'][:limit] #subgrid tke
 #xland= vars['xland'][:limit] #1 for land and 2 for water
 #z0= vars['znt'][:limit] #surface roughness length
-qv= vars['qv'][:limit] #water vapor mixing ratio
-tke= vars['xkzm'][:limit] #subgrid tke
-kmh= vars['kmh'][:limit] #subgrid horizontal eddy viscosity (eddy diffusivity for momentum)
-khh= vars['khh'][:limit] #subgrid horizontal eddy diffusivity (eddy diffusivity for temperature)
-kmv= vars['kmv'][:limit] #subgrid vertical eddy viscosity (eddy diffusivity for momentum)
-khv= vars['khv'][:limit] #subgrid vertical eddy diffusivity (eddy diffusivity for temperature)
+# qv= vars['qv'][:limit] #water vapor mixing ratio
+# tke= vars['xkzm'][:limit] #subgrid tke
+# kmh= vars['kmh'][:limit] #subgrid horizontal eddy viscosity (eddy diffusivity for momentum)
+# khh= vars['khh'][:limit] #subgrid horizontal eddy diffusivity (eddy diffusivity for temperature)
+# kmv= vars['kmv'][:limit] #subgrid vertical eddy viscosity (eddy diffusivity for momentum)
+# khv= vars['khv'][:limit] #subgrid vertical eddy diffusivity (eddy diffusivity for temperature)
 
 
 
@@ -646,6 +651,51 @@ plt.ylim([0,10])
 #plt.contour(field,np.arange(0,20,1),colors='k')
 #plt.clabel(field,inline=False,fontsize=8,colors='k')
 #plt.ylabel('Height (km)',name='Arial',weight='bold',size=16,style='italic')
+plt.show()
+
+#%%
+#Print wind speed u and v in function of time and height but with subplots
+fig,ax1 = plt.subplots(figsize=(10,10)) 
+plt.rcParams.update({'font.size':16})
+#plt.title('Wind Speed as a Function of Time and Height',weight='bold',name='Arial',size=20)
+wndspeed = np.sqrt(np.array(v[:,:,0:3,:])**2   +  np.array(u[:,:,0:3,:-1])**2)
+zv,tv=np.meshgrid(z,time)
+
+plt.subplot(3,1,1)
+field2 = plt.contourf(tv,zv,np.nanmean(wndspeed[:,:,:,164:165],axis=(2,3)),np.arange(0,20,1),cmap='CMRmap')
+
+cbar = plt.colorbar()
+cbar.set_label("Wind Speed ($ms^{-1}$)", name='Arial',size=18)
+plt.tick_params(labelbottom = False, bottom = False)
+# plt.xticks(time[0:len(time):4], time2[0:len(time):4], rotation='vertical')
+plt.ylabel('Height (km)',size=20)
+# plt.gcf().autofmt_xdate()
+# plt.ylim([0,10])
+
+plt.subplot(3,1,2)
+field2 = plt.contourf(tv,zv,np.nanmean(u[:,:,:,164:165],axis=(2,3)),np.arange(0,20,1),cmap='CMRmap')
+
+cbar = plt.colorbar()
+cbar.set_label("Wind Speed ($ms^{-1}$)", name='Arial',size=18)
+plt.tick_params(labelbottom = False, bottom = False)
+# plt.xticks(time[0:len(time):4], time2[0:len(time):4], rotation='vertical')
+plt.ylabel('Height (km)',size=20)
+# plt.gcf().autofmt_xdate()
+# plt.ylim([0,10])
+
+plt.subplot(3,1,3)
+field2 = plt.contourf(tv,zv,np.nanmean(v[:,:,:,164:165],axis=(2,3)),np.arange(0,20,1),cmap='CMRmap')
+
+cbar = plt.colorbar()
+cbar.set_label("Wind Speed ($ms^{-1}$)", name='Arial',size=18)
+plt.xticks(time[0:len(time):8], time2[0:len(time):8], rotation='vertical',size=13)
+plt.ylabel('Height (km)',size=20)
+plt.gcf().autofmt_xdate()
+plt.ylim([0,10])
+
+plt.subplots_adjust(bottom=0.12, top=0.97, hspace=0.05)
+
+plt.show()
 
 #%%
 #Print ageostrophic wind speed in function of time and height
@@ -1610,7 +1660,7 @@ bwr_custom_thpert2 = custom_div_cmap2(30)
     
 
 #Animation of U or V winds, potential temperature and pressure (xz section)
-defasagem = 10
+defasagem = 0
 xm,zm=np.meshgrid(xh,z)
 
 for k in range(0,len(time)-defasagem,1):
@@ -1641,8 +1691,9 @@ for k in range(0,len(time)-defasagem,1):
     # plt.title(time1[k],name='Arial',weight='bold',size=20)
     # plt.xlabel('X Domain (km)',name='Arial',weight='bold',size=16,style='italic')
     # plt.ylabel('Height (km)',name='Arial',weight='bold',size=16,style='italic')
-
-    # ax=fig.add_subplot(2,1,1)
+    
+    # #wind speed
+    # ax=fig.add_subplot(1,1,1)
     # wndspeed = np.sqrt(np.array(v[:,:,0:2,:])**2   +  np.array(u[:,:,0:2,:-1])**2)
     # plt.contourf(xm,zm,wndspeed[k,:,0,:],np.arange(0,20.1,0.1),cmap='CMRmap')
     # #plt.pcolormesh(xm,zm,wndspeed[k,:,0,:],cmap='CMRmap',vmin=0, vmax=8)
@@ -1655,18 +1706,19 @@ for k in range(0,len(time)-defasagem,1):
     # ax.set_xlim([-1000,1000])
     # ax.set_ylim([0,7])
     
-    ax=fig.add_subplot(1,1,1)
-    plt.contourf(xm,zm,dudx[k,:,0,:-1],np.arange(-0.2,0.205,0.005),cmap='seismic')
-    #plt.pcolormesh(xm,zm,dudx[k,:,0,:-1],cmap='seismic',vmin=-0.3, vmax=0.3)
-    #plt.contourf(xm,zh[0,:,0,:]/1000.0,dudx[k,:,0,:-1],np.arange(-0.2,0.205,0.005),cmap='seismic')
-    plt.colorbar(label='Divergence ($s^{-1}$)')
-    #plt.title(time2[k] + '     ' +str(int(solrad[k,0,0])) ,name='Arial',weight='bold',size=20)
-    #plt.title(time2[k],name='Arial',weight='bold',size=20)
-    plt.xlabel('X Domain (km)',name='Arial',size=16,style='italic')
-    plt.ylabel('Height (km)',name='Arial',size=16,style='italic')
-    #ax.set_xlim([-2968,2968])
-    ax.set_xlim([-2000,2000])
-    ax.set_ylim([0,7])
+    # #convergence
+    # ax=fig.add_subplot(1,1,1)
+    # plt.contourf(xm,zm,dudx[k,:,0,:-1],np.arange(-0.2,0.205,0.005),cmap='seismic')
+    # #plt.pcolormesh(xm,zm,dudx[k,:,0,:-1],cmap='seismic',vmin=-0.3, vmax=0.3)
+    # #plt.contourf(xm,zh[0,:,0,:]/1000.0,dudx[k,:,0,:-1],np.arange(-0.2,0.205,0.005),cmap='seismic')
+    # plt.colorbar(label='Divergence ($s^{-1}$)')
+    # #plt.title(time2[k] + '     ' +str(int(solrad[k,0,0])) ,name='Arial',weight='bold',size=20)
+    # #plt.title(time2[k],name='Arial',weight='bold',size=20)
+    # plt.xlabel('X Domain (km)',name='Arial',size=16,style='italic')
+    # plt.ylabel('Height (km)',name='Arial',size=16,style='italic')
+    # #ax.set_xlim([-2968,2968])
+    # ax.set_xlim([-2000,2000])
+    # ax.set_ylim([0,7])
 
     # ax=fig.add_subplot(2,1,1)
     # #plt.contourf(xm,zm,thpert[k,:,0,:],np.arange(-10,10.5,0.5),cmap='seismic')
@@ -1724,10 +1776,11 @@ for k in range(0,len(time)-defasagem,1):
 #    plt.xlabel('X Domain (km)',name='Arial',weight='bold',size=16,style='italic')
 #    plt.ylabel('Height (km)',name='Arial',weight='bold',size=16,style='italic')
 
+    # #vertical motion
     # ax=fig.add_subplot(1,1,1)
     # #plt.contourf(xm,zm,w[k,:-1,0,:],np.arange(-0.1,0.11,0.01),cmap='seismic')
-    # plt.pcolormesh(xm,zm,w[k,:-1,0,:],cmap='seismic',vmin=-0.05, vmax=0.05)
-    # #plt.pcolormesh(xm,zh[0,:,0,:]/1000.0,w[k,:-1,0,:],cmap='seismic',vmin=-0.1, vmax=0.1)
+    # #plt.pcolormesh(xm,zm,w[k,:-1,0,:],cmap='seismic',vmin=-0.05, vmax=0.05)
+    # plt.pcolormesh(xm,zh[0,:,0,:]/1000.0,w[k,:-1,0,:],cmap='seismic',vmin=-0.1, vmax=0.1)
     # plt.colorbar(label=r'Vertical velocity (m $\rms^{-1}$)')
     # #plt.title(time2[k],name='Arial',size=20)
     # plt.xlabel('X Domain (km)',name='Arial',size=16)
@@ -1792,14 +1845,14 @@ for k in range(0,len(time)-defasagem,1):
     # ax.set_ylim([0,4])
     # plt.grid(True)
     
-    # ax=fig.add_subplot(3,1,3)
-    # wndspeed = np.sqrt(np.array(v[:,:,0:2,:])**2   +  np.array(u[:,:,0:2,:-1])**2)
-    # plt.plot(wndspeed[k,:,0,0],z)
-    # #plt.title(time2[k] + '     ' +str(int(solrad[k,0,0])) ,name='Arial',weight='bold',size=20)
-    # plt.xlabel('Wind Speed (m/s)',name='Arial',weight='bold',size=16,style='italic')
-    # plt.ylabel('Height (km)',name='Arial',weight='bold',size=16,style='italic')
-    # ax.set_xlim([0,20])
-    # ax.set_ylim([0,3])
+    ax=fig.add_subplot(1,1,1)
+    wndspeed = np.sqrt(np.array(v[:,:,0:2,:])**2   +  np.array(u[:,:,0:2,:-1])**2)
+    plt.plot(wndspeed[k,:,0,xposition],z)
+    #plt.title(time2[k] + '     ' +str(int(solrad[k,0,0])) ,name='Arial',weight='bold',size=20)
+    plt.xlabel('Wind Speed (m/s)',name='Arial',weight='bold',size=16,style='italic')
+    plt.ylabel('Height (km)',name='Arial',weight='bold',size=16,style='italic')
+    ax.set_xlim([0,20])
+    ax.set_ylim([0,5])
     
     
     # ax=fig.add_subplot(2,1,2)
