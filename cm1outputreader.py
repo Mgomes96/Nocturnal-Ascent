@@ -655,45 +655,80 @@ plt.show()
 
 #%%
 #Print wind speed u and v in function of time and height but with subplots
+# fig,ax1 = plt.subplots(figsize=(10,10)) 
+# plt.rcParams.update({'font.size':16})
+# #plt.title('Wind Speed as a Function of Time and Height',weight='bold',name='Arial',size=20)
+# wndspeed = np.sqrt(np.array(v[:,:,0:3,:])**2   +  np.array(u[:,:,0:3,:-1])**2)
+# zv,tv=np.meshgrid(z,time)
+
+# plt.subplot(3,1,1)
+# field2 = plt.contourf(tv,zv,np.nanmean(wndspeed[:,:,:,327:328],axis=(2,3)),np.arange(0,22,1),cmap='CMRmap')
+
+# cbar = plt.colorbar()
+# #cbar.set_label(r'U wind (m $\rms^{-1}$)', name='Arial',size=18)
+# plt.tick_params(labelbottom = False, bottom = False)
+# # plt.xticks(time[0:len(time):4], time2[0:len(time):4], rotation='vertical')
+# plt.ylabel('Height (km)',size=20)
+# # plt.gcf().autofmt_xdate()
+# plt.ylim([0,6])
+
+# plt.subplot(3,1,2)
+# field2 = plt.contourf(tv,zv,np.nanmean(u[:,:,:,327:328],axis=(2,3)),np.arange(-10,11,1),cmap='seismic')
+
+
+# cbar = plt.colorbar()
+# #cbar.set_label(r'V wind (m $\rms^{-1}$)', name='Arial',size=18)
+# plt.tick_params(labelbottom = False, bottom = False)
+# # plt.xticks(time[0:len(time):4], time2[0:len(time):4], rotation='vertical')
+# plt.ylabel('Height (km)',size=20)
+# # plt.gcf().autofmt_xdate()
+# plt.ylim([0,6])
+
+# plt.subplot(3,1,3)
+# field2 = plt.contourf(tv,zv,np.nanmean(v[:,:,:,327:328],axis=(2,3)),np.arange(-0,22,1),cmap='CMRmap')
+
+# cbar = plt.colorbar()
+# #cbar.set_label(r'Wind Speed (m $\rms^{-1}$)', name='Arial',size=18)
+# plt.xticks(time[0:len(time):8], time2[0:len(time):8], rotation='vertical',size=13)
+# plt.ylabel('Height (km)',size=20)
+# plt.gcf().autofmt_xdate()
+# plt.ylim([0,6])
+
+# plt.subplots_adjust(bottom=0.12, top=0.97, hspace=0.09)
+
+# plt.show()
+
+
+#Print w and theta in function of time and height but with subplots
 fig,ax1 = plt.subplots(figsize=(10,10)) 
 plt.rcParams.update({'font.size':16})
 #plt.title('Wind Speed as a Function of Time and Height',weight='bold',name='Arial',size=20)
 wndspeed = np.sqrt(np.array(v[:,:,0:3,:])**2   +  np.array(u[:,:,0:3,:-1])**2)
 zv,tv=np.meshgrid(z,time)
 
-plt.subplot(3,1,1)
-field2 = plt.contourf(tv,zv,np.nanmean(wndspeed[:,:,:,164:165],axis=(2,3)),np.arange(0,20,1),cmap='CMRmap')
+plt.subplot(2,1,1)
+field3 = plt.contourf(tv,zv,np.nanmean(theta[:,:,:,327:328],axis=(2,3)),np.arange(290,340,2),cmap='CMRmap')
 
 cbar = plt.colorbar()
-cbar.set_label("Wind Speed ($ms^{-1}$)", name='Arial',size=18)
+#cbar.set_label(r'U wind (m $\rms^{-1}$)', name='Arial',size=18)
 plt.tick_params(labelbottom = False, bottom = False)
 # plt.xticks(time[0:len(time):4], time2[0:len(time):4], rotation='vertical')
 plt.ylabel('Height (km)',size=20)
 # plt.gcf().autofmt_xdate()
-# plt.ylim([0,10])
+plt.ylim([0,6])
 
-plt.subplot(3,1,2)
-field2 = plt.contourf(tv,zv,np.nanmean(u[:,:,:,164:165],axis=(2,3)),np.arange(0,20,1),cmap='CMRmap')
-
-cbar = plt.colorbar()
-cbar.set_label("Wind Speed ($ms^{-1}$)", name='Arial',size=18)
-plt.tick_params(labelbottom = False, bottom = False)
-# plt.xticks(time[0:len(time):4], time2[0:len(time):4], rotation='vertical')
-plt.ylabel('Height (km)',size=20)
-# plt.gcf().autofmt_xdate()
-# plt.ylim([0,10])
-
-plt.subplot(3,1,3)
-field2 = plt.contourf(tv,zv,np.nanmean(v[:,:,:,164:165],axis=(2,3)),np.arange(0,20,1),cmap='CMRmap')
+plt.subplot(2,1,2)
+field3 = plt.contourf(tv,zv,np.nanmean(w[:,:-1,:,327:328],axis=(2,3)),np.arange(-0.02,0.025,0.005),cmap='seismic')
 
 cbar = plt.colorbar()
-cbar.set_label("Wind Speed ($ms^{-1}$)", name='Arial',size=18)
+#cbar.set_label(r'V wind (m $\rms^{-1}$)', name='Arial',size=18)
 plt.xticks(time[0:len(time):8], time2[0:len(time):8], rotation='vertical',size=13)
 plt.ylabel('Height (km)',size=20)
 plt.gcf().autofmt_xdate()
-plt.ylim([0,10])
+plt.ylim([0,6])
 
-plt.subplots_adjust(bottom=0.12, top=0.97, hspace=0.05)
+
+plt.subplots_adjust(bottom=0.12, top=0.97, hspace=0.09)
 
 plt.show()
 
