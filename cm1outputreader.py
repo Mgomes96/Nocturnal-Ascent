@@ -1185,7 +1185,7 @@ for k in range(0,len(thetaexp)):
 #mixratio = list(np.array(mixratio)*6)
 #mixratio0 = mixratio0*6
 
-#CHanging the low level moisture
+#Changing the low level moisture
 # mixratio = np.array(mixratio)
 # for k in range(0,len(mixratio)):
 #     if k < 15:
@@ -1194,8 +1194,12 @@ for k in range(0,len(thetaexp)):
 
 mixratio = np.array(mixratio)
 for k in range(0,len(mixratio)):
-    # mixratio[k] = 1 * np.exp(abs(z[k]-14200)/27000) - 1 #+ np.exp((abs(z[k]-14000)-14000)/3200)
-    mixratio[k] = 0.2 * np.exp(-z[k]/1000) +0.005
+    #mixratio[k] = 1 * np.exp(abs(z[k]-14200)/27000) - 1 #+ np.exp((abs(z[k]-14000)-14000)/3200)
+    #mixratio[k] = 0.2 * np.exp(-z[k]/1000) +0.005
+    #mixratio[k] = 0.0025 + 0.6 * (14275-z[k])/14275
+    mixratio[k] = 0.001 + 0.6 * (14275-z[k])/14275
+    #mixratio[k] = 0.000003 * z[k]
+    #mixratio[k] = 1*np.exp(-z[k]/2000) 
 mixratio0 = mixratio[0]
 
 # mixratio[k] = 5 * np.exp(-z[k]/1000)  
@@ -1532,6 +1536,47 @@ plt.xticks(np.arange(-0.0006,0.0007,0.0003))
 ax.set_ylim([0,4])
 plt.grid(True)
 
+#%%
+#Calculating the buoyancy gradient 
+
+dBdx=np.ones_like(B[:,:,:,:])*np.nan
+for k in range(1,len(xh)-1):
+    dBdx[:,:,:,k] = ( B[:,:,:,k+1] - B[:,:,:,k-1] ) / abs( (xh[2]-xh[0])*1000.0 )
+    
+    
+dBdx5=np.ones_like(B[:,:,:,:])*np.nan
+for k in range(1,len(xh)-10):
+    dBdx5[:,:,:,k] = ( B[:,:,:,k+5] - B[:,:,:,k-5] ) / abs( (xh[2]-xh[0])*5000.0 )
+    
+#Calculating the buoyancy gradient during the hottest time of day only and only below a certain height
+height1 = 25
+height2 = 50
+B_aftnoon = B[[17,17+24,17+48,17+72],height1:height2,:,:]
+dBdx_aftnoon=np.ones_like(B_aftnoon[:,:,:,:])*np.nan
+for k in range(1,len(xh)-1):
+    dBdx_aftnoon[:,:,:,k] = ( B_aftnoon[:,:,:,k+1] - B_aftnoon[:,:,:,k-1] ) / abs( (xh[2]-xh[0])*1000.0 )
+    
+
+B_aftnoon5 = B[[17,17+24,17+48,17+72],height1:height2,:,:]
+dBdx_aftnoon5=np.ones_like(B_aftnoon5[:,:,:,:])*np.nan
+for k in range(1,len(xh)-5):
+    dBdx_aftnoon5[:,:,:,k] = ( B_aftnoon5[:,:,:,k+5] - B_aftnoon5[:,:,:,k-5] ) / abs( (xh[2]-xh[0])*5000.0 )
+    
+
+#Calculating the buoyancy gradient 1h befor max w only below a certain height
+height1 = 25
+height2 = 50
+B_night = B[[21,21+24,21+48,21+72],height1:height2,:,:]
+dBdx_night=np.ones_like(B_night[:,:,:,:])*np.nan
+for k in range(1,len(xh)-1):
+    dBdx_night[:,:,:,k] = ( B_night[:,:,:,k+1] - B_night[:,:,:,k-1] ) / abs( (xh[2]-xh[0])*1000.0 )
+    
+B_night5 = B[[21,21+24,21+48,21+72],height1:height2,:,:]
+dBdx_night5=np.ones_like(B_night5[:,:,:,:])*np.nan
+for k in range(1,len(xh)-5):
+    dBdx_night5[:,:,:,k] = ( B_night5[:,:,:,k+5] - B_night5[:,:,:,k-5] ) / abs( (xh[2]-xh[0])*5000.0 )
+    
+    
 
 
 
