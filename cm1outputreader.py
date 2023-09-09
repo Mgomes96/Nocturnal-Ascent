@@ -104,15 +104,15 @@ P= vars['prs'][:limit] #pressure
 #Pi= vars['pi'][:limit] #nondimensional pressure (exner function)
 #Pipert= vars['pipert'][:limit] #nondimensional pressure perturbation (exner function
 
-# PGFpertwPi = vars['wb_pgrad'][:limit] #pressure gradient term in the CM1 w equation
-# Bw = vars['wb_buoy'][:limit] #buoyancy in the CM1 w equation
-# hadvw = vars['wb_hadv'][:limit] #horizontal advection in the CM1 w equation
-# vadvw = vars['wb_vadv'][:limit] #vertical advection in the CM1 w equation
-# whturb = vars['wb_hturb'][:limit] #horizontal turbulence tendency in the CM1 w equation
-# wvturb = vars['wb_vturb'][:limit] #vertical turbulence tendency in the CM1 w equation
-# # wrdamp = vars['wb_rdamp'][:limit] #rayleigh damping tendency in the CM1 w equation
-# hidiffw = vars['wb_hidiff'][:limit] #horizontal diffusion term in the w equation
-# vidiffw = vars['wb_vidiff'][:limit] #vertical diffusion term in the w equation
+PGFpertwPi = vars['wb_pgrad'][:limit] #pressure gradient term in the CM1 w equation
+Bw = vars['wb_buoy'][:limit] #buoyancy in the CM1 w equation
+hadvw = vars['wb_hadv'][:limit] #horizontal advection in the CM1 w equation
+vadvw = vars['wb_vadv'][:limit] #vertical advection in the CM1 w equation
+whturb = vars['wb_hturb'][:limit] #horizontal turbulence tendency in the CM1 w equation
+wvturb = vars['wb_vturb'][:limit] #vertical turbulence tendency in the CM1 w equation
+wrdamp = vars['wb_rdamp'][:limit] #rayleigh damping tendency in the CM1 w equation
+hidiffw = vars['wb_hidiff'][:limit] #horizontal diffusion term in the w equation
+vidiffw = vars['wb_vidiff'][:limit] #vertical diffusion term in the w equation
 
 # PGFpertuPi = vars['ub_pgrad'][:limit] #pressure gradient term in the CM1 u equation
 # fcoru = vars['ub_cor'][:limit] #coriolis term in the CM1 u equation
@@ -1206,7 +1206,14 @@ for k in range(0,len(mixratio)):
     #mixratio[k] = 0.001 + 0.3 * (14275-z[k])/14275
     #mixratio[k] = 0.001 + 0.2 * (14275-z[k])/14275  #noclouds
     #mixratio[k] = 0.001 + 0.25 * (14275-z[k])/14275  # no clouds at all
-    mixratio[k] = 0.0025 + 0.25 * (14275-z[k])/14275
+    #mixratio[k] = 0.0025 + 0.25 * (14275-z[k])/14275  #1st try
+    #mixratio[k] = 0.003 + 0.3 * (14275-z[k])/14275  #2nd try
+    #mixratio[k] = 0.001 + 0.4 * (14070-z[k])/14070 #3rd try
+    #mixratio[k] = 0.001 + 0.3 * (14070-z[k])/14070 #4th try
+    #mixratio[k] = 0.001 + 0.25 * (14070-z[k])/14070 #5th try  use this as base
+    #mixratio[k] = 0.001 + 0.28 * (14070-z[k])/14070   #1st try
+    #mixratio[k] = 0.002 + 0.28 * (14070-z[k])/14070   #0st try
+    mixratio[k] = 0.0025 + 0.28 * (14070-z[k])/14070
     #mixratio[k] = 0.000003 * z[k]
     #mixratio[k] = 1*np.exp(-z[k]/2000) 
 mixratio0 = mixratio[0]
@@ -1709,7 +1716,7 @@ initPGF = np.ones_like(u[:,:,:,:]) * 0.0 + (0.000084 * 10.0)
 
 
 
-
+dwdtcm1 = PGFpertwPi + Bw + hadvw + vadvw + whturb + wvturb + wrdamp + hidiffw + vidiffw
 
 
 
@@ -1876,18 +1883,18 @@ for k in range(0,len(time)-defasagem,1):
 #    plt.xlabel('X Domain (km)',name='Arial',weight='bold',size=16,style='italic')
 #    plt.ylabel('Height (km)',name='Arial',weight='bold',size=16,style='italic')
 
-    #vertical motion
-    ax=fig.add_subplot(1,1,1)
-    #plt.contourf(xm,zm,w[k,:-1,0,:],np.arange(-0.1,0.11,0.01),cmap='seismic')
-    #plt.pcolormesh(xm,zm,w[k,:-1,0,:],cmap='seismic',vmin=-0.05, vmax=0.05)
-    plt.pcolormesh(xm,zh[0,:,0,:]/1000.0,w[k,:-1,0,:],cmap='seismic',vmin=-0.1, vmax=0.1)
-    plt.colorbar(label=r'Vertical velocity (m $\rms^{-1}$)')
-    #plt.title(time2[k],name='Arial',size=20)
-    plt.xlabel('X Domain (km)',name='Arial',size=16)
-    plt.ylabel('Height (km)',name='Arial',size=16)
-    #ax.set_xlim([-2968,2968])
-    ax.set_xlim([-2000,2000])
-    ax.set_ylim([0,14])
+    # #vertical motion
+    # ax=fig.add_subplot(1,1,1)
+    # #plt.contourf(xm,zm,w[k,:-1,0,:],np.arange(-0.1,0.11,0.01),cmap='seismic')
+    # #plt.pcolormesh(xm,zm,w[k,:-1,0,:],cmap='seismic',vmin=-0.05, vmax=0.05)
+    # plt.pcolormesh(xm,zh[0,:,0,:]/1000.0,w[k,:-1,0,:],cmap='seismic',vmin=-0.1, vmax=0.1)
+    # plt.colorbar(label=r'Vertical velocity (m $\rms^{-1}$)')
+    # #plt.title(time2[k],name='Arial',size=20)
+    # plt.xlabel('X Domain (km)',name='Arial',size=16)
+    # plt.ylabel('Height (km)',name='Arial',size=16)
+    # #ax.set_xlim([-2968,2968])
+    # ax.set_xlim([-2000,2000])
+    # ax.set_ylim([0,14])
 
 #    plt.subplot(2,1,2)
 #    plt.contourf(xm,zm,qv[k,:,0,:],np.arange(0,0.0075,0.0005),cmap='CMRmap')
@@ -2190,7 +2197,7 @@ for k in range(0,len(time)-defasagem,1):
     # ax.set_ylim([0,7])  
     
     
-    # ax=fig.add_subplot(2,1,2)
+    # ax=fig.add_subplot(1,1,1)
     # plt.contourf(xm,zm,(PGFpertwPi+Bw+hadvw+vadvw+whturb+wvturb+wrdamp)[k,:-1,0,:],np.arange(-0.0000075,0.0000076,0.0000001),cmap='seismic')
     # #plt.contourf(xm,zh[0,:,0,:]/1000.0,T[k,:,0,:],np.arange(205,315,2),cmap='CMRmap')
     # plt.colorbar(label='Local change in W from output')
@@ -2200,6 +2207,18 @@ for k in range(0,len(time)-defasagem,1):
     # #ax.set_ylim([0,14])
     # ax.set_xlim([-1000,1000])
     # ax.set_ylim([0,7])
+    
+    
+    ax=fig.add_subplot(1,1,1)
+    plt.contourf(xm,zm,dwdtcm1[k,:-1,0,:],cmap='seismic')
+    #plt.contourf(xm,zh[0,:,0,:]/1000.0,T[k,:,0,:],np.arange(205,315,2),cmap='CMRmap')
+    plt.colorbar(label='Local change in W from output')
+    #plt.title(time1[k],name='Arial',weight='bold',size=20)
+    plt.xlabel('X Domain (km)',name='Arial',weight='bold',size=16,style='italic')
+    plt.ylabel('Height (km)',name='Arial',weight='bold',size=16,style='italic')
+    #ax.set_ylim([0,14])
+    ax.set_xlim([-1000,1000])
+    ax.set_ylim([0,7])
     
     
     
@@ -2287,7 +2306,7 @@ for k in range(0,len(time)-defasagem,1):
     # ax.set_xlim([-1000,1000])
     # ax.set_ylim([0,7])
     
-    # ax=fig.add_subplot(2,1,2)
+    # ax=fig.add_subplot(1,1,1)
     # plt.contourf(xm,zm,(PGFpertwPi + Bw)[k,:-1,0,:],np.arange(-0.0000035,0.0000036,0.0000001),cmap='seismic')
     # #plt.contourf(xm,zh[0,:,0,:]/1000.0,T[k,:,0,:],np.arange(205,315,2),cmap='CMRmap')
     # plt.colorbar(label='Buoyancy plus PGFPipert')
