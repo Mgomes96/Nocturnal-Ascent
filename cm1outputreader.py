@@ -9,7 +9,7 @@ import datetime
 
 #This part gets the parcel data but its not necessary
 
-rootgrp = Dataset('cm1out_pdata.nc','r')
+rootgrp = Dataset('/home/owner/Documents/LLJConvection/cm1model/cm1out_pdata.nc','r')
 
 dims = rootgrp.dimensions
 
@@ -61,7 +61,7 @@ import datetime
 #This part reads the output from the model
 
 
-rootgrp = Dataset('/home/owner/Documents/LLJConvection/cm1model/cm1out.nc','r')
+rootgrp = Dataset('/home/owner/Documents/LLJConvection/cm1model/cm1out_albedoGeos.nc','r')
 
 dims = rootgrp.dimensions
 
@@ -97,17 +97,17 @@ for var in vars:
 
 #133 
 #172      
-limit = 133
+limit = 1000
 #rain = vars['rain'][:limit]
-P= vars['prs'][:limit] #pressure
+#P= vars['prs'][:limit] #pressure
 #Ppert= vars['prspert'][:limit] #pressure perturbation
 #Pi= vars['pi'][:limit] #nondimensional pressure (exner function)
 #Pipert= vars['pipert'][:limit] #nondimensional pressure perturbation (exner function
 
-# PGFpertwPi = vars['wb_pgrad'][:limit] #pressure gradient term in the CM1 w equation
-# Bw = vars['wb_buoy'][:limit] #buoyancy in the CM1 w equation
-# hadvw = vars['wb_hadv'][:limit] #horizontal advection in the CM1 w equation
-# vadvw = vars['wb_vadv'][:limit] #vertical advection in the CM1 w equation
+PGFpertwPi = vars['wb_pgrad'][:limit] #pressure gradient term in the CM1 w equation
+Bw = vars['wb_buoy'][:limit] #buoyancy in the CM1 w equation
+#hadvw = vars['wb_hadv'][:limit] #horizontal advection in the CM1 w equation
+#vadvw = vars['wb_vadv'][:limit] #vertical advection in the CM1 w equation
 # whturb = vars['wb_hturb'][:limit] #horizontal turbulence tendency in the CM1 w equation
 # wvturb = vars['wb_vturb'][:limit] #vertical turbulence tendency in the CM1 w equation
 # wrdamp = vars['wb_rdamp'][:limit] #rayleigh damping tendency in the CM1 w equation
@@ -138,7 +138,7 @@ P= vars['prs'][:limit] #pressure
 #th_hadv= vars['ptb_hadv'][:] #Horizontal advection of potential temperature
 
 
-xh= vars['xh'][:] #x coordinate
+xh= vars['xh'][:] #x coordinateyy
 yh= vars['yh'][:] #y cooordinate
 xf= vars['xf'][:] #extra x coordinate
 yf= vars['yf'][:] #extra y coordinate
@@ -146,9 +146,9 @@ yf= vars['yf'][:] #extra y coordinate
 z= vars['zh'][:] #height (use only for version 20.2 of cm1)
 #zh=vars['zh'][:limit] #height on nominal levels (use for plots if terrain is not flat and in version 19.8)
 zh=vars['zhval'][:limit] #height on nominal levels (use for plots if terrain is not flat and in version 20.2)
-u= vars['u'][:limit] #u wind
+#u= vars['u'][:limit] #u wind
 #u= vars['ua'][:limit] #u wind (for restart runs only)
-v= vars['v'][:limit] #v wind
+#v= vars['v'][:limit] #v wind
 #v= vars['va'][:limit] #v wind (for restart runs only)
 w= vars['w'][:limit] #vertical velocity
 #w= vars['wa'][:limit] #vertical velocity (for restart runs only)
@@ -170,7 +170,7 @@ solrad= vars['swten'][:limit] #heating from shortwaves (K/s)
 #lu0= vars['lu'][:limit] #subgrid tke
 #xland= vars['xland'][:limit] #1 for land and 2 for water
 #z0= vars['znt'][:limit] #surface roughness length
-qv= vars['qv'][:limit] #water vapor mixing ratio
+#qv= vars['qv'][:limit] #water vapor mixing ratio
 # tke= vars['xkzm'][:limit] #subgrid tke
 # kmh= vars['kmh'][:limit] #subgrid horizontal eddy viscosity (eddy diffusivity for momentum)
 # khh= vars['khh'][:limit] #subgrid horizontal eddy diffusivity (eddy diffusivity for temperature)
@@ -269,7 +269,7 @@ plt.plot(qv[0,:,0,0],z,linewidth=3,color='k')
 plt.xlabel(r'Mixing Ratio ($\rmkgkg^{-1}$) ')
 plt.ylabel('Height (km)')
 plt.ylim([0,14])
-plt.xlim([0,0.001])
+plt.xlim([0,0.002])
 plt.grid('True')
 plt.show()
 
@@ -642,8 +642,8 @@ wndspeed = np.sqrt(np.array(v[:,:,0:3,:])**2   +  np.array(u[:,:,0:3,:-1])**2)
 zv,tv=np.meshgrid(z,time)
 #field = plt.contourf(tv,zv,np.nanmean(wndspeed[:,:,:,:],axis=(2,3)),np.arange(0,20,1),cmap='CMRmap')
 #ufield = plt.contourf(tv,zv,np.nanmean(u[:,:,:,:],axis=(2,3)),np.arange(-10,10,1),cmap='CMRmap')
-field2 = plt.contourf(tv,zv,np.nanmean(wndspeed[:,:,:,164:165],axis=(2,3)),np.arange(0,20,1),cmap='CMRmap')
-#field2 = plt.contourf(tv,zva,np.nanmean(wndspeed[:,:,:,328],axis=(2)),np.arange(0,20,1),cmap='CMRmap')
+#field2 = plt.contourf(tv,zv,np.nanmean(wndspeed[:,:,:,164:165],axis=(2,3)),np.arange(0,20,1),cmap='CMRmap')
+field2 = plt.contourf(tv,zv,np.nanmean(wndspeed[:,:,:,328],axis=(2)),np.arange(0,20,1),cmap='CMRmap')
 #field2terrain = plt.contourf(tv,zh[:,:,0,328]/1000,wndspeed[:,:,0,328],np.arange(0,21,1),cmap='CMRmap')
 cbar = plt.colorbar()
 cbar.set_label(r'Wind speed ($\rmms^{-1}$) ')
@@ -920,7 +920,7 @@ zposition2 = 94 #height2  was 44 for old 40km run
 
 #-----------------------------------------------------------------------
 init_time1 = 0  
-final_time1 = 23 
+final_time1 = 23
 
 x1 = u[init_time1:final_time1 + 1,zposition1,0,xposition]
 y1 = v[init_time1:final_time1 + 1,zposition1,0,xposition]
@@ -1226,6 +1226,7 @@ for k in range(0,len(mixratio)):
     #mixratio[k] = 1.4*np.exp(-z[k]/3800)    #ayy4
     #mixratio[k] = 1.4*np.exp(-z[k]/3500)     #ayy5
     mixratio[k] = 1.4*np.exp(-z[k]/3200)    #ayyyyyyyy
+    #mixratio[k] = 5*np.exp(-z[k]/3200)
 mixratio0 = mixratio[0]
 
 # mixratio[k] = 5 * np.exp(-z[k]/1000)  
@@ -1486,7 +1487,7 @@ plt.plot(time,meankenergy)
 #Calculating the maximum vertical parcel displacements for every 24 hour period
 reference = -99999999
 for k in range (0,len(zparcel[0])):
-    for t in range(0,len(time)-21+2-4-2):
+    for t in range(0,len(time)-21+2-4-2-8):
         counter = 0
         while counter < 19:
             if abs(zparcel[t][k]-zparcel[t+1+counter][k]) > reference:
@@ -1726,8 +1727,9 @@ initPGF = np.ones_like(u[:,:,:,:]) * 0.0 + (0.000084 * 10.0)
 
 
 
-dwdtcm1 = PGFpertwPi + Bw + hadvw + vadvw + whturb + wvturb + wrdamp + hidiffw + vidiffw
-
+wcm1 = np.ones_like(w[:,:,:,:])*[0]
+for t in range(0,len(w)-1):
+    wcm1[t+1] = wcm1[t] + (PGFpertwPi[t] + Bw[t])*360 
 
 
 
@@ -1794,20 +1796,22 @@ for k in range(0,len(time)-defasagem,1):
 
 
     # ax=fig.add_subplot(2,1,1)
-    # plt.contourf(xm,zm,u[k,:,0,:-1],np.arange(-10,10.1,0.1),cmap='seismic')
-    # plt.colorbar(label='Wind Speed (m/s)')
-    # #plt.title(time2[k],name='Arial',weight='bold',size=20)
-    # #plt.xlabel('X Domain (km)',name='Arial',weight='bold',size=16,style='italic')
-    # plt.ylabel('Height (km)',name='Arial',weight='bold',size=16,style='italic')
-    # ax.set_xlim([-2968,2968])
-    # ax.set_ylim([0,7])
+    # plt.contourf(xm,zh[0,:,0,:]/1000.0,u[k,:,0,:-1],np.arange(-10,11,1),cmap='seismic')
+    # plt.colorbar(label=r'U wind (m $\rms^{-1}$)')
+    # plt.xlabel('X Domain (km)',name='Arial',size=16)
+    # plt.ylabel('Height (km)',name='Arial',size=16)
+    # #ax.set_xlim([-2968,2968])
+    # ax.set_xlim([-4000,4000])
+    # ax.set_ylim([0,4])
     
-    # plt.subplot(2,1,1)
-    # plt.contourf(xm,zm,v[k,:,0,:],np.arange(-5,5.1,0.1),cmap='CMRmap')
-    # plt.colorbar(label='Wind Speed (m/s)')
-    # plt.title(time1[k],name='Arial',weight='bold',size=20)
-    # plt.xlabel('X Domain (km)',name='Arial',weight='bold',size=16,style='italic')
-    # plt.ylabel('Height (km)',name='Arial',weight='bold',size=16,style='italic')
+    # ax=fig.add_subplot(2,1,2)
+    # plt.contourf(xm,zh[0,:,0,:]/1000.0,v[k,:,0,:],np.arange(-19,20,1),cmap='seismic')
+    # plt.colorbar(label=r'V wind (m $\rms^{-1}$)')
+    # plt.xlabel('X Domain (km)',name='Arial',size=16)
+    # plt.ylabel('Height (km)',name='Arial',size=16)
+    # #ax.set_xlim([-2968,2968])
+    # ax.set_xlim([-4000,4000])
+    # ax.set_ylim([0,4])
     
     # #wind speed
     # ax=fig.add_subplot(1,1,1)
@@ -1824,11 +1828,11 @@ for k in range(0,len(time)-defasagem,1):
     # ax.set_ylim([0,7])
     
     # #convergence
-    # ax=fig.add_subplot(1,1,1)
+    # ax=fig.add_subplot(2,1,1)
     # plt.contourf(xm,zm,dudx[k,:,0,:-1],np.arange(-0.2,0.205,0.005),cmap='seismic')
     # #plt.pcolormesh(xm,zm,dudx[k,:,0,:-1],cmap='seismic',vmin=-0.3, vmax=0.3)
     # #plt.contourf(xm,zh[0,:,0,:]/1000.0,dudx[k,:,0,:-1],np.arange(-0.2,0.205,0.005),cmap='seismic')
-    # plt.colorbar(label='Divergence ($s^{-1}$)')
+    # plt.colorbar(label=r'Divergence ($\rms^{-1}$)')
     # #plt.title(time2[k] + '     ' +str(int(solrad[k,0,0])) ,name='Arial',weight='bold',size=20)
     # #plt.title(time2[k],name='Arial',weight='bold',size=20)
     # plt.xlabel('X Domain (km)',name='Arial',size=16,style='italic')
@@ -1852,32 +1856,32 @@ for k in range(0,len(time)-defasagem,1):
     # ax.set_ylim([0,7])
     
     
-#     ax=fig.add_subplot(2,1,1)
-#     #plt.contourf(xm,zm,theta[k,:,0,:],np.arange(290,330,1),cmap='Reds')
-#     #plt.pcolormesh(xm,zm,theta[k,:,0,:],vmin=290, vmax=350,cmap=bwr_custom_thpert2)
-# #    plt.contourf(xm,zm,T[k,:,0,:],np.arange(205,315,2),cmap='CMRmap')
-#     plt.contourf(xm,zh[0,:,0,:]/1000.0,theta[k,:,0,:],np.arange(290,330,1),cmap='Reds')
-#     plt.colorbar(label='Potential temperature (K)')
-#     #plt.title(time1[k],name='Arial',weight='bold',size=20)
-#     plt.xlabel('X Domain (km)',name='Arial',size=16)
-#     plt.ylabel('Height (km)',name='Arial',size=16)
-#     #ax.set_ylim([0,14])
-#     ax.set_xlim([-2000,2000])
-#     ax.set_ylim([0,4])
+    # ax=fig.add_subplot(2,1,1)
+    # #plt.contourf(xm,zm,theta[k,:,0,:],np.arange(290,330,1),cmap='Reds')
+    # #plt.pcolormesh(xm,zm,theta[k,:,0,:],vmin=290, vmax=350,cmap=bwr_custom_thpert2)
+    # #plt.contourf(xm,zm,T[k,:,0,:],np.arange(205,315,2),cmap='CMRmap')
+    # plt.contourf(xm,zh[0,:,0,:]/1000.0,theta[k,:,0,:],np.arange(290,330,1),cmap='Reds')
+    # plt.colorbar(label='Potential temperature (K)')
+    # #plt.title(time1[k],name='Arial',weight='bold',size=20)
+    # plt.xlabel('X Domain (km)',name='Arial',size=16)
+    # plt.ylabel('Height (km)',name='Arial',size=16)
+    # #ax.set_ylim([0,14])
+    # ax.set_xlim([-2000,2000])
+    # ax.set_ylim([0,4])
     
 
   
-#     ax=fig.add_subplot(2,1,2)
-#     #plt.contourf(xm,zm,B[k,:,0,:],np.arange(-0.5,0.52,0.02),cmap='seismic')
-#     plt.contourf(xm,zh[0,:,0,:]/1000.0,B[k,:,0,:],np.arange(-0.5,0.52,0.02),cmap='seismic')
-#     #plt.pcolormesh(xm,zm,B[k,:,0,:],cmap=bwr_custom_thpert,vmin=-0.4, vmax=0.4)
-#     #plt.pcolormesh(xm,zh[0,:,0,:]/1000.0,B[k,:,0,:],cmap=bwr_custom_thpert,vmin=-0.4, vmax=0.4)
-#     plt.colorbar(label=r'Buoyancy (m $\rms^{-2}$)')
-#     #plt.title(time1[k],name='Arial',weight='bold',size=20)
-#     plt.xlabel('X Domain (km)',name='Arial',size=16)
-#     plt.ylabel('Height (km)',name='Arial',size=16)
-#     ax.set_xlim([-2000,2000])
-#     ax.set_ylim([0,4])
+    # ax=fig.add_subplot(2,1,1)
+    # #plt.contourf(xm,zm,B[k,:,0,:],np.arange(-0.5,0.52,0.02),cmap='seismic')
+    # plt.contourf(xm,zh[0,:,0,:]/1000.0,B[k,:,0,:],np.arange(-0.5,0.52,0.02),cmap='seismic')
+    # #plt.pcolormesh(xm,zm,B[k,:,0,:],cmap=bwr_custom_thpert,vmin=-0.4, vmax=0.4)
+    # #plt.pcolormesh(xm,zh[0,:,0,:]/1000.0,B[k,:,0,:],cmap=bwr_custom_thpert,vmin=-0.4, vmax=0.4)
+    # plt.colorbar(label=r'Buoyancy (m $\rms^{-2}$)')
+    # #plt.title(time1[k],name='Arial',weight='bold',size=20)
+    # plt.xlabel('X Domain (km)')
+    # plt.ylabel('Height (km)')
+    # ax.set_xlim([-4000,4000])
+    # ax.set_ylim([0,4])
 
 #    plt.subplot(2,1,2)
 #    plt.contourf(xm,zh[0,:,0,:],P[k,:,0,:]-P[0,:,0,:],np.arange(-350,350,10),cmap='seismic')
@@ -1886,25 +1890,38 @@ for k in range(0,len(time)-defasagem,1):
 #    plt.xlabel('X Domain (km)',name='Arial',weight='bold',size=16,style='italic')
 #    plt.ylabel('Height (km)',name='Arial',weight='bold',size=16,style='italic')
 
-#    plt.subplot(2,1,2)
-#    plt.contourf(xm,zm,cloud[k,:,0,:],cmap='seismic')
-#    plt.colorbar(label='Cloud Fraction (Pa)')
-#    plt.title(time1[k],name='Arial',weight='bold',size=20)
-#    plt.xlabel('X Domain (km)',name='Arial',weight='bold',size=16,style='italic')
-#    plt.ylabel('Height (km)',name='Arial',weight='bold',size=16,style='italic')
+    # plt.subplot(2,1,2)
+    # plt.contourf(xm,zm,cloud[k,:,0,:],cmap='seismic')
+    # plt.colorbar(label='Cloud Fraction (Pa)')
+    # plt.title(time1[k],name='Arial',weight='bold',size=20)
+    # plt.xlabel('X Domain (km)',name='Arial',weight='bold',size=16,style='italic')
+    # plt.ylabel('Height (km)',name='Arial',weight='bold',size=16,style='italic')
 
     #vertical motion
-    ax=fig.add_subplot(1,1,1)
-    #plt.contourf(xm,zm,w[k,:-1,0,:],np.arange(-0.1,0.11,0.01),cmap='seismic')
+    ax=fig.add_subplot(2,1,1)
+    plt.contourf(xm,zh[0,:,0,:]/1000.0,w[k,:-1,0,:],np.arange(-0.1,0.11,0.01),cmap='seismic')
     #plt.pcolormesh(xm,zm,w[k,:-1,0,:],cmap='seismic',vmin=-0.05, vmax=0.05)
-    plt.pcolormesh(xm,zh[0,:,0,:]/1000.0,w[k,:-1,0,:],cmap='seismic',vmin=-0.1, vmax=0.1)
+    #plt.pcolormesh(xm,zh[0,:,0,:]/1000.0,w[k,:-1,0,:],cmap='seismic',vmin=-0.1, vmax=0.1)
     plt.colorbar(label=r'Vertical velocity (m $\rms^{-1}$)')
     #plt.title(time2[k],name='Arial',size=20)
     plt.xlabel('X Domain (km)',name='Arial',size=16)
     plt.ylabel('Height (km)',name='Arial',size=16)
     #ax.set_xlim([-2968,2968])
-    ax.set_xlim([-2000,2000])
+    ax.set_xlim([-1000,1000])
     ax.set_ylim([0,7])
+    
+    # #vertical motion cm1
+    # ax=fig.add_subplot(2,1,2)
+    # plt.contourf(xm,zh[0,:,0,:]/1000.0,wcm1[k,:-1,0,:],np.arange(-0.1,0.11,0.01),cmap='seismic')
+    # #plt.pcolormesh(xm,zm,w[k,:-1,0,:],cmap='seismic',vmin=-0.05, vmax=0.05)
+    # #plt.pcolormesh(xm,zh[0,:,0,:]/1000.0,w[k,:-1,0,:],cmap='seismic',vmin=-0.1, vmax=0.1)
+    # plt.colorbar(label=r'Vertical velocity (m $\rms^{-1}$)')
+    # #plt.title(time2[k],name='Arial',size=20)
+    # plt.xlabel('X Domain (km)',name='Arial',size=16)
+    # plt.ylabel('Height (km)',name='Arial',size=16)
+    # #ax.set_xlim([-2968,2968])
+    # ax.set_xlim([-1000,1000])
+    # ax.set_ylim([0,4])
 
 #    plt.subplot(2,1,2)
 #    plt.contourf(xm,zm,qv[k,:,0,:],np.arange(0,0.0075,0.0005),cmap='CMRmap')
@@ -1921,7 +1938,7 @@ for k in range(0,len(time)-defasagem,1):
     # ax.set_xlim([-1000,1000])
     # ax.set_ylim([0,7])
     
-    # ax=fig.add_subplot(2,1,2)
+    # ax=fig.add_subplot(1,1,1)
     # plt.contourf(xm,zh[0,:,0,:]/1000.0,dBdx[k,:,0,:],np.arange(-1.3964576*10**-6,1.3964576*10**-6 + 1.3964576*10**-6/20,1.3964576*10**-6/20),cmap='seismic')
     # #plt.pcolormesh(xm,zm,w[k,:-1,0,:],cmap='seismic',vmin=-0.05, vmax=0.05)
     # #plt.pcolormesh(xm,zh[0,:,0,:]/1000.0,w[k,:-1,0,:],cmap='seismic',vmin=-0.1, vmax=0.1)
@@ -1963,7 +1980,7 @@ for k in range(0,len(time)-defasagem,1):
     # plt.plot(u[k,:,0,xposition],z)
     # #plt.title(time2[k] + '     ' +str(int(solrad[k,0,0])) ,name='Arial',weight='bold',size=20)
     # # plt.title(time2[k],name='Arial',size=20)
-    # plt.xlabel(r'U wind (m $\rms^{-1}$)',name='Arial',size=16)
+    # plt.xlabel(r'U wind (m $\rms^{-1}$) ')
     # plt.ylabel('Height (km)',name='Arial',size=16)
     # ax.set_xlim([-10,20])
     # ax.set_ylim([0,4])
@@ -1973,13 +1990,13 @@ for k in range(0,len(time)-defasagem,1):
     # ax=fig.add_subplot(2,2,1)
     # plt.plot(u[k,:,0,xposition2],z)
     # #plt.title(time2[k] + '     ' +str(int(solrad[k,0,0])) ,name='Arial',weight='bold',size=20)
-    # plt.xlabel(r'U wind (m $\rms^{-1}$)',name='Arial',size=16)
-    # plt.ylabel('Height (km)',name='Arial',size=16)
+    # plt.xlabel(r'U wind (m $\rms^{-1}$) ')
+    # plt.ylabel('Height (km)')
     # ax.set_xlim([-10,20])
     # ax.set_ylim([0,4])
     # plt.grid(True)
     
-    # ax=fig.add_subplot(2,1,2)
+    # ax=fig.add_subplot(2,2,2)
     # plt.plot(v[k,:,0,xposition],z)
     # #plt.title(time2[k] + '     ' +str(int(solrad[k,0,0])) ,name='Arial',weight='bold',size=20)
     # plt.xlabel(r'V wind (m $\rms^{-1}$)',name='Arial',size=16)
@@ -1992,7 +2009,7 @@ for k in range(0,len(time)-defasagem,1):
     # wndspeed = np.sqrt(np.array(v[:,:,0:2,:])**2   +  np.array(u[:,:,0:2,:-1])**2)
     # plt.plot(wndspeed[k,:,0,xposition],z)
     # #plt.title(time2[k] + '     ' +str(int(solrad[k,0,0])) ,name='Arial',weight='bold',size=20)
-    # plt.xlabel('Wind Speed (m/s)',name='Arial',weight='bold',size=16,style='italic')
+    # plt.xlabel(r'Wind speed (m $\rms^{-1}$)',name='Arial',size=16)
     # plt.ylabel('Height (km)',name='Arial',weight='bold',size=16,style='italic')
     # ax.set_xlim([0,20])
     # ax.set_ylim([0,5])
@@ -2016,27 +2033,27 @@ for k in range(0,len(time)-defasagem,1):
     
     # ax=fig.add_subplot(2,2,4)
     # plt.plot(upblten[k,:,0,xposition],z,label='Turbulence')
-    # plt.plot(fcoru[k,:,0,xposition] - initPGF[k,:,0,xposition],z,label='Coriolis minus free-atmosphere PGF')
-    # plt.plot(PGFpertuPi[k,:,0,xposition],z,label='Perturbation PGF')
+    # plt.plot(fcoru[k,:,0,xposition] - initPGF[k,:,0,xposition],z,label='Coriolis minus base PGF')
+    # plt.plot(PGFpertuPi[k,:,0,xposition],z,label='PPGF')
     # plt.plot(urdamp[k,:,0,xposition],z,label='Rayleigh Damping')
     # plt.plot(hadvu[k,:,0,xposition],z,label='Horizontal advection')
     # plt.plot(vadvu[k,:,0,xposition],z,label='Vertical advection')
     # plt.plot(uidiff[k,:,0,xposition],z,label='Artificial Diffusion')
     # # plt.plot(uhturb[k,:,0,xposition],z,label='Horizontal Turbulence')
     # # plt.plot(uvturb[k,:,0,xposition],z,label='Vertical Turbulence')
-    # #plt.legend(fontsize=10)
+    # plt.legend(fontsize=13)
     # #plt.title(time2[k] + '     ' +str(int(solrad[k,0,0])) ,name='Arial',weight='bold',size=20)
-    # plt.xlabel(r'Terms in the U equation of motion (m $\rms^{-2}$)',name='Arial',size=16)
-    # plt.ylabel('Height (km)',name='Arial',size=16)
+    # plt.xlabel(r'Terms in the U equation of motion (m $\rms^{-2}$)')
+    # plt.ylabel('Height (km)')
     # ax.set_xlim([-0.0015,0.0015])
     # ax.set_ylim([0,4])
     # plt.grid(True)
     
     # ax=fig.add_subplot(2,2,3)
     # plt.plot(upblten[k,:,0,xposition2],z,label='Turbulence')
-    # plt.plot(fcoru[k,:,0,xposition2] - initPGF[k,:,0,xposition],z,label='Coriolis minus free-atmosphere PGF')
-    # plt.plot(PGFpertuPi[k,:,0,xposition2],z,label='Perturbation PGF')
-    # plt.plot(urdamp[k,:,0,xposition],z,label='Rayleigh Damping')
+    # plt.plot(fcoru[k,:,0,xposition2] - initPGF[k,:,0,xposition],z,label='Coriolis free-atmosphere base PGF')
+    # plt.plot(PGFpertuPi[k,:,0,xposition2],z,label='PPGF')
+    # plt.plot(urdamp[k,:,0,xposition2],z,label='Rayleigh Damping')
     # plt.plot(hadvu[k,:,0,xposition2],z,label='Horizontal advection')
     # plt.plot(vadvu[k,:,0,xposition2],z,label='Vertical advection')
     # plt.plot(uidiff[k,:,0,xposition2],z,label='Artificial Diffusion')
@@ -2044,7 +2061,7 @@ for k in range(0,len(time)-defasagem,1):
     # # plt.plot(uvturb[k,:,0,xposition],z,label='Vertical Turbulence')
     # #plt.legend(fontsize=10)
     # #plt.title(time2[k] + '     ' +str(int(solrad[k,0,0])) ,name='Arial',weight='bold',size=20)
-    # plt.xlabel(r'Terms in the U equation of motion (m $\rms^{-2}$)',name='Arial',size=16)
+    # plt.xlabel(r'Terms in the U equation of motion (m $\rms^{-2}$)')
     # plt.ylabel('Height (km)',name='Arial',size=16)
     # ax.set_xlim([-0.0015,0.0015])
     # ax.set_ylim([0,4])
@@ -2054,7 +2071,7 @@ for k in range(0,len(time)-defasagem,1):
     # ax=fig.add_subplot(2,2,4)
     # plt.plot(vpblten[k,:,0,xposition],z,label='PBL tendency')
     # plt.plot(fcorv[k,:,0,xposition],z,label='Coriolis minus base PGF')
-    # plt.plot(PGFpertvPi[k,:,0,xposition],z,label='Perturbation PGF')
+    # plt.plot(PGFpertvPi[k,:,0,xposition],z,label='PPGF')
     # plt.plot(vrdamp[k,:,0,xposition],z,label='Rayleigh Damping')
     # plt.plot(hadvv[k,:,0,xposition],z,label='Horizontal advection')
     # plt.plot(vadvv[k,:,0,xposition],z,label='Vertical advection')
@@ -2063,8 +2080,8 @@ for k in range(0,len(time)-defasagem,1):
     # # plt.plot(uvturb[k,:,0,xposition],z,label='Vertical Turbulence')
     # plt.legend(fontsize=13)
     # #plt.title(time2[k] + '     ' +str(int(solrad[k,0,0])) ,name='Arial',weight='bold',size=20)
-    # plt.xlabel('Terms in the V equation of motion ($ms^{-2}$)',name='Arial',size=16,style='italic')
-    # plt.ylabel('Height (km)',name='Arial',size=16,style='italic')
+    # plt.xlabel(r'Terms in the V equation of motion (m $\rms^{-2}$)')
+    # plt.ylabel('Height (km)')
     # ax.set_xlim([-0.0015,0.0015])
     # ax.set_ylim([0,4])
     # plt.grid(True)
@@ -2305,16 +2322,16 @@ for k in range(0,len(time)-defasagem,1):
     # ax.set_ylim([0,7])
     
     
-    # ax=fig.add_subplot(2,1,2)
-    # plt.contourf(xm,zm,Bw[k,:-1,0,:],np.arange(-0.56,0.56,0.005),cmap='seismic')
-    # #plt.contourf(xm,zh[0,:,0,:]/1000.0,T[k,:,0,:],np.arange(205,315,2),cmap='CMRmap')
-    # plt.colorbar(label='Buoyancy')
-    # #plt.title(time1[k],name='Arial',weight='bold',size=20)
-    # plt.xlabel('X Domain (km)',name='Arial',weight='bold',size=16,style='italic')
-    # plt.ylabel('Height (km)',name='Arial',weight='bold',size=16,style='italic')
-    # #ax.set_ylim([0,14])
-    # ax.set_xlim([-1000,1000])
-    # ax.set_ylim([0,7])
+    ax=fig.add_subplot(2,1,2)
+    plt.contourf(xm,zm,Bw[k,:-1,0,:],np.arange(-0.56,0.56,0.005),cmap='seismic')
+    #plt.contourf(xm,zh[0,:,0,:]/1000.0,T[k,:,0,:],np.arange(205,315,2),cmap='CMRmap')
+    plt.colorbar(label='Buoyancy')
+    #plt.title(time1[k],name='Arial',weight='bold',size=20)
+    plt.xlabel('X Domain (km)',name='Arial',weight='bold',size=16,style='italic')
+    plt.ylabel('Height (km)',name='Arial',weight='bold',size=16,style='italic')
+    #ax.set_ylim([0,14])
+    ax.set_xlim([-1000,1000])
+    ax.set_ylim([0,7])
     
     # ax=fig.add_subplot(2,1,1)
     # plt.contourf(xm,zm,(PGFpertwPi + Bw)[k,:-1,0,:],np.arange(-0.00035,0.00036,0.00002),cmap='seismic')
