@@ -61,7 +61,7 @@ import datetime
 #This part reads the output from the model
 
 
-rootgrp = Dataset('/home/owner/Documents/LLJConvection/cm1model/cm1out_albedoGeos.nc','r')
+rootgrp = Dataset('/home/owner/Documents/LLJConvection/cm1model/cm1out1.nc','r')
 
 dims = rootgrp.dimensions
 
@@ -146,15 +146,15 @@ yf= vars['yf'][:] #extra y coordinate
 z= vars['zh'][:] #height (use only for version 20.2 of cm1)
 #zh=vars['zh'][:limit] #height on nominal levels (use for plots if terrain is not flat and in version 19.8)
 zh=vars['zhval'][:limit] #height on nominal levels (use for plots if terrain is not flat and in version 20.2)
-#u= vars['u'][:limit] #u wind
+u= vars['u'][:limit] #u wind
 #u= vars['ua'][:limit] #u wind (for restart runs only)
-#v= vars['v'][:limit] #v wind
+v= vars['v'][:limit] #v wind
 #v= vars['va'][:limit] #v wind (for restart runs only)
 w= vars['w'][:limit] #vertical velocity
 #w= vars['wa'][:limit] #vertical velocity (for restart runs only)
 #dbz= vars['dbz'][:limit] #reflectivity
 time= vars['time'][:limit] #time 
-#theta= vars['th'][:limit] #potential temperature
+theta= vars['th'][:limit] #potential temperature
 #theta= vars['tha'][:limit] #potential temperature (for restart runs only)
 #thpert= vars['thpert'][:limit] #potential temperature perturbation
 #N= np.sqrt(vars['nm'][:limit]) #brunt-vaisala frequency 
@@ -275,6 +275,78 @@ plt.show()
 
 
 #%%
+
+#Plots panel of W like in Shapiro et al 2018
+st_time = 89 # 67
+intval = 2
+xm,zm=np.meshgrid(xh,z)
+fig=plt.figure(figsize=(10,10))
+
+ax=fig.add_subplot(5,1,1)
+plt.contourf(xm,zh[0,:,0,:]/1000.0,w[st_time,:-1,0,:],np.arange(-0.05,0.055,0.005),cmap='seismic')
+#plt.colorbar(label=r'Vertical velocity (m $\rms^{-1}$)')
+#plt.title(time2[k],name='Arial',size=20)
+#plt.xlabel('X Domain (km)',name='Arial',size=16)
+plt.ylabel('Height (km)',name='Arial',size=16)
+ax.set_xlim([-500,500])
+ax.set_ylim([0,6])
+plt.tick_params(labelbottom = False, bottom = False)
+plt.text(0.87, 0.9, time2[st_time], horizontalalignment='center', verticalalignment='center', transform=ax.transAxes)
+
+ax=fig.add_subplot(5,1,2)
+plt.contourf(xm,zh[0,:,0,:]/1000.0,w[st_time+intval,:-1,0,:],np.arange(-0.05,0.055,0.005),cmap='seismic')
+#plt.colorbar(label=r'Vertical velocity (m $\rms^{-1}$)')
+#plt.title(time2[k],name='Arial',size=20)
+#plt.xlabel('X Domain (km)',name='Arial',size=16)
+plt.ylabel('Height (km)',name='Arial',size=16)
+ax.set_xlim([-500,500])
+ax.set_ylim([0,6])
+plt.tick_params(labelbottom = False, bottom = False)
+plt.text(0.87, 0.9, time2[st_time+intval], horizontalalignment='center', verticalalignment='center', transform=ax.transAxes)
+
+ax=fig.add_subplot(5,1,3)
+plt.contourf(xm,zh[0,:,0,:]/1000.0,w[st_time+2*intval,:-1,0,:],np.arange(-0.05,0.055,0.005),cmap='seismic')
+#plt.colorbar(label=r'Vertical velocity (m $\rms^{-1}$)')
+#plt.title(time2[k],name='Arial',size=20)
+#plt.xlabel('X Domain (km)',name='Arial',size=16)
+plt.ylabel('Height (km)',name='Arial',size=16)
+ax.set_xlim([-500,500])
+ax.set_ylim([0,6])
+plt.tick_params(labelbottom = False, bottom = False)
+plt.text(0.87, 0.9, time2[st_time+2*intval], horizontalalignment='center', verticalalignment='center', transform=ax.transAxes)
+
+ax=fig.add_subplot(5,1,4)
+plt.contourf(xm,zh[0,:,0,:]/1000.0,w[st_time+3*intval,:-1,0,:],np.arange(-0.05,0.055,0.005),cmap='seismic')
+#plt.colorbar(label=r'Vertical velocity (m $\rms^{-1}$)')
+#plt.title(time2[k],name='Arial',size=20)
+#plt.xlabel('X Domain (km)',name='Arial',size=16)
+plt.ylabel('Height (km)',name='Arial',size=16)
+ax.set_xlim([-500,500])
+ax.set_ylim([0,6])
+plt.tick_params(labelbottom = False, bottom = False)
+plt.text(0.87, 0.9, time2[st_time+3*intval], horizontalalignment='center', verticalalignment='center', transform=ax.transAxes)
+
+ax=fig.add_subplot(5,1,5)
+plt.contourf(xm,zh[0,:,0,:]/1000.0,w[st_time+4*intval,:-1,0,:],np.arange(-0.05,0.055,0.005),cmap='seismic')
+#plt.colorbar(label=r'Vertical velocity (m $\rms^{-1}$)')
+#plt.title(time2[k],name='Arial',size=20)
+plt.xlabel('X Domain (km)',name='Arial',size=16)
+plt.ylabel('Height (km)',name='Arial',size=16)
+ax.set_xlim([-500,500])
+ax.set_ylim([0,6])
+plt.text(0.87, 0.9, time2[st_time+4*intval], horizontalalignment='center', verticalalignment='center', transform=ax.transAxes)
+
+plt.subplots_adjust(bottom=0.07, top=0.93, hspace=0.15, right=0.8)
+#fig.subplots_adjust(right=0.8)
+cbar_ax = fig.add_axes([0.85, 0.15, 0.03, 0.7])
+fig.colorbar(plt.contourf(xm,zh[0,:,0,:]/1000.0,w[94,:-1,0,:],np.arange(-0.05,0.055,0.005),cmap='seismic'), cax=cbar_ax,label=r'Vertical velocity (m $\rms^{-1}$)')
+
+
+
+#%%
+
+
+
 
 ##Print U, V and W winds (horizontal section )
 #xm,ym = np.meshgrid(xf,yh)
@@ -704,35 +776,36 @@ plt.subplots_adjust(bottom=0.12, top=0.97, hspace=0.09)
 plt.show()
 
 nameoffigure = 'winds25Nbaroclinic+800km'
-#nameoffigure = 'winds25Nbaroclinic-70km'
+#nameoffigure = 'winds25Nbaroclinic-70km' 
 string_in_string = "{}".format(nameoffigure)
 plt.savefig("/home/owner/Documents/LLJConvection/cm1model/figures/"+string_in_string)
 
 #%%
 #Print w and theta in function of time and height but with subplots
+reducao = 5
 fig,ax1 = plt.subplots(figsize=(20,20)) 
 plt.rcParams.update({'font.size':16})
 #plt.title('Wind Speed as a Function of Time and Height',weight='bold',name='Arial',size=20)
 wndspeed = np.sqrt(np.array(v[:,:,0:3,:])**2   +  np.array(u[:,:,0:3,:-1])**2)
-zv,tv=np.meshgrid(z,time)
+zv,tv=np.meshgrid(z,time[:len(time)-reducao])
 
-plt.subplot(2,1,1)
-field3 = plt.contourf(tv,zv,np.nanmean(theta[:,:,:,319:320],axis=(2,3)),np.arange(290,340,2),cmap='CMRmap')
+# plt.subplot(2,1,1)
+# field3 = plt.contourf(tv,zv,np.nanmean(theta[:,:,:,319:320],axis=(2,3)),np.arange(290,340,2),cmap='CMRmap')
 
-cbar = plt.colorbar()
-#cbar.set_label(r'U wind (m $\rms^{-1}$)', name='Arial',size=18)
-plt.tick_params(labelbottom = False, bottom = False)
-# plt.xticks(time[0:len(time):4], time2[0:len(time):4], rotation='vertical')
-plt.ylabel('Height (km)',size=20)
-# plt.gcf().autofmt_xdate()
-plt.ylim([0,6])
+# cbar = plt.colorbar()
+# #cbar.set_label(r'U wind (m $\rms^{-1}$)', name='Arial',size=18)
+# plt.tick_params(labelbottom = False, bottom = False)
+# # plt.xticks(time[0:len(time):4], time2[0:len(time):4], rotation='vertical')
+# plt.ylabel('Height (km)',size=20)
+# # plt.gcf().autofmt_xdate()
+# plt.ylim([0,6])
 
-plt.subplot(2,1,2)
-field3 = plt.contourf(tv,zv,np.nanmean(w[:,:-1,:,319:320],axis=(2,3)),np.arange(-0.07,0.07,0.005),cmap='seismic')
+plt.subplot(1,1,1)
+field3 = plt.contourf(tv,zv,np.nanmean(w[:len(time)-reducao,:-1,:,319:320],axis=(2,3)),np.arange(-0.07,0.07,0.005),cmap='seismic')
 
 cbar = plt.colorbar()
 #cbar.set_label(r'V wind (m $\rms^{-1}$)', name='Arial',size=18)
-plt.xticks(time[0:len(time):3], time2[0:len(time):3], rotation='vertical',size=13)
+plt.xticks(time[0:len(time)-reducao:6], time2[0:len(time)-reducao:6], rotation='vertical')
 plt.ylabel('Height (km)',size=20)
 plt.gcf().autofmt_xdate()
 plt.ylim([0,6])
@@ -909,7 +982,7 @@ xposition = 0
 init_time = 0  
 final_time = 130  
 sunrise_time = 53  #was 54 for old 40km run
-zposition1 = 44 #height1  was 19 for old 40km run
+zposition1 = 29 #height1  was 19 for old 40km run
 zposition2 = 94 #height2  was 44 for old 40km run
 
 
