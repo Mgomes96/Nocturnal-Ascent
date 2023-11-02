@@ -61,7 +61,7 @@ import datetime
 #This part reads the output from the model
 
 
-rootgrp = Dataset('/home/owner/Documents/LLJConvection/cm1model/cm1out1.nc','r')
+rootgrp = Dataset('/home/owner/Documents/LLJConvection/cm1model/cm1out4.nc','r')
 
 dims = rootgrp.dimensions
 
@@ -158,7 +158,7 @@ theta= vars['th'][:limit] #potential temperature
 #theta= vars['tha'][:limit] #potential temperature (for restart runs only)
 #thpert= vars['thpert'][:limit] #potential temperature perturbation
 #N= np.sqrt(vars['nm'][:limit]) #brunt-vaisala frequency 
-#B= vars['buoyancy'][:limit] #buoyancy
+B= vars['buoyancy'][:limit] #buoyancy
 #rho= vars['rho'][:limit] #dry air density
 #zs= vars['zs'][:limit] #height of the terrain
 solrad= vars['swten'][:limit] #heating from shortwaves (K/s)
@@ -706,16 +706,17 @@ fig.colorbar(plt.contourf(xm,zh[0,:,0,:]/1000.0,w[94,:-1,0,:],np.arange(-0.05,0.
 # zh=zh[0:85]
 # u=u[0:85]
 # v=v[0:85]
+reducao = 50
 #Print wind speed in function of time and height
 fig = plt.figure()
 plt.rcParams.update({"font.size": 16})
 #plt.title('Wind Speed as a Function of Time and Height',weight='bold',name='Arial',size=20)
 wndspeed = np.sqrt(np.array(v[:,:,0:3,:])**2   +  np.array(u[:,:,0:3,:-1])**2)
-zv,tv=np.meshgrid(z,time)
+zv,tv=np.meshgrid(z,time[:len(time)-reducao])
 #field = plt.contourf(tv,zv,np.nanmean(wndspeed[:,:,:,:],axis=(2,3)),np.arange(0,20,1),cmap='CMRmap')
 #ufield = plt.contourf(tv,zv,np.nanmean(u[:,:,:,:],axis=(2,3)),np.arange(-10,10,1),cmap='CMRmap')
 #field2 = plt.contourf(tv,zv,np.nanmean(wndspeed[:,:,:,164:165],axis=(2,3)),np.arange(0,20,1),cmap='CMRmap')
-field2 = plt.contourf(tv,zv,np.nanmean(wndspeed[:,:,:,328],axis=(2)),np.arange(0,20,1),cmap='CMRmap')
+field2 = plt.contourf(tv,zv,np.nanmean(wndspeed[:len(time)-reducao,:,:,7],axis=(2)),np.arange(0,20,1),cmap='CMRmap')  #328
 #field2terrain = plt.contourf(tv,zh[:,:,0,328]/1000,wndspeed[:,:,0,328],np.arange(0,21,1),cmap='CMRmap')
 cbar = plt.colorbar()
 cbar.set_label(r'Wind speed ($\rmms^{-1}$) ')
@@ -782,7 +783,7 @@ plt.savefig("/home/owner/Documents/LLJConvection/cm1model/figures/"+string_in_st
 
 #%%
 #Print w and theta in function of time and height but with subplots
-reducao = 5
+reducao = 10
 fig,ax1 = plt.subplots(figsize=(20,20)) 
 plt.rcParams.update({'font.size':16})
 #plt.title('Wind Speed as a Function of Time and Height',weight='bold',name='Arial',size=20)
