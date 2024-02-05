@@ -4,6 +4,7 @@ import numpy as np
 from netCDF4 import Dataset,num2date
 import datetime
 #from myfunctions import maxmin
+from PIL import Image 
 
 
 
@@ -57,11 +58,12 @@ import numpy as np
 from netCDF4 import Dataset,num2date
 import datetime
 #from myfunctions import maxmin
+from PIL import Image 
 
 #This part reads the output from the model
 
 
-rootgrp = Dataset('/home/owner/Documents/LLJConvection/cm1model/cm1out4.nc','r')
+rootgrp = Dataset('/home/owner/Documents/LLJConvection/cm1model/cm1out.nc','r')
 
 dims = rootgrp.dimensions
 
@@ -170,12 +172,17 @@ solrad= vars['swten'][:limit] #heating from shortwaves (K/s)
 #lu0= vars['lu'][:limit] #subgrid tke
 #xland= vars['xland'][:limit] #1 for land and 2 for water
 #z0= vars['znt'][:limit] #surface roughness length
-#qv= vars['qv'][:limit] #water vapor mixing ratio
+qv= vars['qv'][:limit] #water vapor mixing ratio
 # tke= vars['xkzm'][:limit] #subgrid tke
 # kmh= vars['kmh'][:limit] #subgrid horizontal eddy viscosity (eddy diffusivity for momentum)
 # khh= vars['khh'][:limit] #subgrid horizontal eddy diffusivity (eddy diffusivity for temperature)
 # kmv= vars['kmv'][:limit] #subgrid vertical eddy viscosity (eddy diffusivity for momentum)
 # khv= vars['khv'][:limit] #subgrid vertical eddy diffusivity (eddy diffusivity for temperature)
+
+#thflux= vars['thflux'][:limit] #
+#qvflux= vars['qvflux'][:limit] #
+
+#ust= vars['ust'][:limit] # friction velocity
 
 
 
@@ -250,16 +257,47 @@ for k in range(0,len(time2)):
 
 #%%
 #Prints potential temperature profile
+fig = plt.figure(figsize=(20,15))
+#plt.figtext(0.30, 0.90, "\u263c", fontsize='large', color='y', ha ='right')
+# plt.title(r'U$_\max$ = 5 m $\rms^{-1}$        U$_\min$ = 5 m $\rms^{-1}$',x=0.5, y=1.02)
+plt.rcParams.update({"font.size": 25})
+plt.plot(theta[0,:,0,0],z,linewidth=5,color='k')
+plt.xlabel("Potential Temperature (K)")
+plt.ylabel('Height (km)')
+plt.ylim([0,14])
+plt.xlim([290,370])
+plt.grid('True')
+plt.tick_params('both', length=8, width=1, which='major')
+plt.savefig('/home/owner/Documents/LLJConvection/cm1model/python_figure',dpi=300)
+im = Image.open('/home/owner/Documents/LLJConvection/cm1model/python_figure.png')    
+im.show()  
+plt.close()
+
+    
+    
+#%%
+#Prints potential temperature profile
 plt.figure()
 #plt.figtext(0.30, 0.90, "\u263c", fontsize='large', color='y', ha ='right')
 # plt.title(r'U$_\max$ = 5 m $\rms^{-1}$        U$_\min$ = 5 m $\rms^{-1}$',x=0.5, y=1.02)
 plt.rcParams.update({"font.size": 16})
-plt.plot(theta[0,:,0,0],z,linewidth=3,color='k')
+plt.plot(theta[26,:,0,0],z,linewidth=3,color='r',linestyle='dashed',label = "No geostrophic wind")
+plt.plot(theta_geos[26,:,0,0],z,linewidth=3,color='b',linestyle='dashed',label = "With a geostrphic wind")
 plt.xlabel("Potential Temperature (K)")
 plt.ylabel('Height (km)')
-#plt.ylim([0,4])
-#plt.xlim([290,335])
+plt.ylim([0,4])
+plt.xlim([295,325])
 plt.grid('True')
+plt.legend()
+
+
+import pickle 
+
+# with open('/home/owner/Documents/katabatic_flows/variables/theta_geos.pickle', 'wb') as handle:
+#     pickle.dump(theta, handle, protocol=pickle.HIGHEST_PROTOCOL)
+    
+with open('/home/owner/Documents/katabatic_flows/variables/theta_geos.pickle', 'rb') as handle:
+    theta_geos = pickle.load(handle)
 
 #%%
 #Prints mixing ratio profile
@@ -269,7 +307,7 @@ plt.plot(qv[0,:,0,0],z,linewidth=3,color='k')
 plt.xlabel(r'Mixing Ratio ($\rmkgkg^{-1}$) ')
 plt.ylabel('Height (km)')
 plt.ylim([0,14])
-plt.xlim([0,0.002])
+plt.xlim([0,0.018])
 plt.grid('True')
 plt.show()
 
@@ -706,30 +744,36 @@ fig.colorbar(plt.contourf(xm,zh[0,:,0,:]/1000.0,w[94,:-1,0,:],np.arange(-0.05,0.
 # zh=zh[0:85]
 # u=u[0:85]
 # v=v[0:85]
-reducao = 50
+reducao = 12  #good for when blows up day 5 at 0430 lst
 #Print wind speed in function of time and height
-fig = plt.figure()
-plt.rcParams.update({"font.size": 16})
+fig = plt.figure(figsize=(20,15))
+plt.rcParams.update({"font.size": 25})
 #plt.title('Wind Speed as a Function of Time and Height',weight='bold',name='Arial',size=20)
 wndspeed = np.sqrt(np.array(v[:,:,0:3,:])**2   +  np.array(u[:,:,0:3,:-1])**2)
 zv,tv=np.meshgrid(z,time[:len(time)-reducao])
 #field = plt.contourf(tv,zv,np.nanmean(wndspeed[:,:,:,:],axis=(2,3)),np.arange(0,20,1),cmap='CMRmap')
 #ufield = plt.contourf(tv,zv,np.nanmean(u[:,:,:,:],axis=(2,3)),np.arange(-10,10,1),cmap='CMRmap')
 #field2 = plt.contourf(tv,zv,np.nanmean(wndspeed[:,:,:,164:165],axis=(2,3)),np.arange(0,20,1),cmap='CMRmap')
-field2 = plt.contourf(tv,zv,np.nanmean(wndspeed[:len(time)-reducao,:,:,7],axis=(2)),np.arange(0,20,1),cmap='CMRmap')  #328
+field2 = plt.contourf(tv,zv,np.nanmean(wndspeed[:len(time)-reducao,:,:,0],axis=(2)),np.arange(0,21,1),cmap='CMRmap')  #328
 #field2terrain = plt.contourf(tv,zh[:,:,0,328]/1000,wndspeed[:,:,0,328],np.arange(0,21,1),cmap='CMRmap')
 cbar = plt.colorbar()
 cbar.set_label(r'Wind speed ($\rmms^{-1}$) ')
-plt.xticks(time[0:len(time):6], time2[0:len(time):6], rotation='vertical')
+plt.xticks(time[0:len(time)-reducao:6], time2[0:len(time)-reducao:6], rotation='vertical')
 plt.ylabel(r'Height (m) ')
 plt.gcf().autofmt_xdate()
 plt.ylim([0,10])
+plt.tick_params('both', length=8, width=1, which='major')
 #plt.ylim([977/1000,4000/1000])
 #plt.yticks(np.arange(0,5,1))
 #plt.contour(field,np.arange(0,20,1),colors='k')
 #plt.clabel(field,inline=False,fontsize=8,colors='k')
 #plt.ylabel('Height (km)',name='Arial',weight='bold',size=16,style='italic')
-plt.show()
+#plt.show()
+plt.savefig('/home/owner/Documents/LLJConvection/cm1model/python_figure',dpi=100)
+im = Image.open('/home/owner/Documents/LLJConvection/cm1model/python_figure.png')    
+im.show()  
+plt.close()
+
 
 #%%
 #Print wind speed u and v in function of time and height but with subplots
@@ -783,7 +827,7 @@ plt.savefig("/home/owner/Documents/LLJConvection/cm1model/figures/"+string_in_st
 
 #%%
 #Print w and theta in function of time and height but with subplots
-reducao = 10
+reducao = 11   #good for when blows up day 5 at 0530 lst
 fig,ax1 = plt.subplots(figsize=(20,20)) 
 plt.rcParams.update({'font.size':16})
 #plt.title('Wind Speed as a Function of Time and Height',weight='bold',name='Arial',size=20)
@@ -1491,7 +1535,7 @@ f.close()
 maxheight2 = []
 maxtime2 =[]
 maxintensity2 = []
-timesteps = 101
+timesteps = 101    #correct for blowp up at day 5 at 05:30
 maxheight = 166
 for k in range(0,timesteps):
     maxtime2.append(k)
@@ -1853,19 +1897,19 @@ bwr_custom_thpert2 = custom_div_cmap2(30)
     
 
 #Animation of U or V winds, potential temperature and pressure (xz section)
-defasagem = 0
+defasagem = 110
 xm,zm=np.meshgrid(xh,z)
 
 for k in range(0,len(time)-defasagem,1):
 
     
-    fig=plt.figure(figsize=(10,10))
-    plt.rcParams.update({"font.size": 16})
-    fig.suptitle(time2[k],name='Arial',size=20)
-    plt.figtext(0.30, 0.940, daynight[k], fontsize=50, color=blackyellow[k], ha ='right')
+    fig=plt.figure(figsize=(20,15))
+    plt.rcParams.update({"font.size": 19})
+    #fig.suptitle(time2[k],name='Arial',size=20)
+    #plt.figtext(0.30, 0.940, daynight[k], fontsize=50, color=blackyellow[k], ha ='right')
     #plt.rcParams.update({"font.size": 16})
     #xposition = 0
-    xposition = 328
+    xposition = 0   #328 is 90km to the east
     xposition2 = 310
 
 
@@ -1888,7 +1932,7 @@ for k in range(0,len(time)-defasagem,1):
     # ax.set_ylim([0,4])
     
     # #wind speed
-    # ax=fig.add_subplot(1,1,1)
+    # ax=fig.add_subplot(2,1,1)
     # wndspeed = np.sqrt(np.array(v[:,:,0:2,:])**2   +  np.array(u[:,:,0:2,:-1])**2)
     # plt.contourf(xm,zm,wndspeed[k,:,0,:],np.arange(0,20.1,0.1),cmap='CMRmap')
     # #plt.pcolormesh(xm,zm,wndspeed[k,:,0,:],cmap='CMRmap',vmin=0, vmax=8)
@@ -1930,32 +1974,35 @@ for k in range(0,len(time)-defasagem,1):
     # ax.set_ylim([0,7])
     
     
-    # ax=fig.add_subplot(2,1,1)
+    # #Potential temperature
+    # ax=fig.add_subplot(1,1,1)
     # #plt.contourf(xm,zm,theta[k,:,0,:],np.arange(290,330,1),cmap='Reds')
     # #plt.pcolormesh(xm,zm,theta[k,:,0,:],vmin=290, vmax=350,cmap=bwr_custom_thpert2)
     # #plt.contourf(xm,zm,T[k,:,0,:],np.arange(205,315,2),cmap='CMRmap')
-    # plt.contourf(xm,zh[0,:,0,:]/1000.0,theta[k,:,0,:],np.arange(290,330,1),cmap='Reds')
-    # plt.colorbar(label='Potential temperature (K)')
+    # plt.contourf(xm,zh[0,:,0,:]/1000.0,theta[k,:,0,:],np.arange(305,321,1),cmap='Reds')
+    # #plt.colorbar(label='Potential temperature (K)')
     # #plt.title(time1[k],name='Arial',weight='bold',size=20)
-    # plt.xlabel('X Domain (km)',name='Arial',size=16)
-    # plt.ylabel('Height (km)',name='Arial',size=16)
+    # #plt.xlabel('X Domain (km)')
+    # plt.ylabel('Height (km)')
     # #ax.set_ylim([0,14])
-    # ax.set_xlim([-2000,2000])
-    # ax.set_ylim([0,4])
+    # ax.set_xlim([-1000,1000])
+    # ax.set_ylim([0,5])
+    # ax.tick_params('both', length=8, width=1, which='major')
     
 
-  
-    # ax=fig.add_subplot(2,1,1)
+    # #Buoyancy
+    # ax=fig.add_subplot(1,1,1)
     # #plt.contourf(xm,zm,B[k,:,0,:],np.arange(-0.5,0.52,0.02),cmap='seismic')
-    # plt.contourf(xm,zh[0,:,0,:]/1000.0,B[k,:,0,:],np.arange(-0.5,0.52,0.02),cmap='seismic')
+    # plt.contourf(xm,zh[0,:,0,:]/1000.0,B[k,:,0,:],np.arange(-0.6,0.62,0.02),cmap='seismic')
     # #plt.pcolormesh(xm,zm,B[k,:,0,:],cmap=bwr_custom_thpert,vmin=-0.4, vmax=0.4)
     # #plt.pcolormesh(xm,zh[0,:,0,:]/1000.0,B[k,:,0,:],cmap=bwr_custom_thpert,vmin=-0.4, vmax=0.4)
     # plt.colorbar(label=r'Buoyancy (m $\rms^{-2}$)')
     # #plt.title(time1[k],name='Arial',weight='bold',size=20)
     # plt.xlabel('X Domain (km)')
     # plt.ylabel('Height (km)')
-    # ax.set_xlim([-4000,4000])
-    # ax.set_ylim([0,4])
+    # ax.set_xlim([-1000,1000])
+    # ax.set_ylim([0,5])
+    # ax.tick_params('both', length=8, width=1, which='major')
 
 #    plt.subplot(2,1,2)
 #    plt.contourf(xm,zh[0,:,0,:],P[k,:,0,:]-P[0,:,0,:],np.arange(-350,350,10),cmap='seismic')
@@ -1971,18 +2018,19 @@ for k in range(0,len(time)-defasagem,1):
     # plt.xlabel('X Domain (km)',name='Arial',weight='bold',size=16,style='italic')
     # plt.ylabel('Height (km)',name='Arial',weight='bold',size=16,style='italic')
 
-    #vertical motion
-    ax=fig.add_subplot(2,1,1)
-    plt.contourf(xm,zh[0,:,0,:]/1000.0,w[k,:-1,0,:],np.arange(-0.1,0.11,0.01),cmap='seismic')
-    #plt.pcolormesh(xm,zm,w[k,:-1,0,:],cmap='seismic',vmin=-0.05, vmax=0.05)
-    #plt.pcolormesh(xm,zh[0,:,0,:]/1000.0,w[k,:-1,0,:],cmap='seismic',vmin=-0.1, vmax=0.1)
-    plt.colorbar(label=r'Vertical velocity (m $\rms^{-1}$)')
-    #plt.title(time2[k],name='Arial',size=20)
-    plt.xlabel('X Domain (km)',name='Arial',size=16)
-    plt.ylabel('Height (km)',name='Arial',size=16)
-    #ax.set_xlim([-2968,2968])
-    ax.set_xlim([-1000,1000])
-    ax.set_ylim([0,7])
+    # #vertical motion
+    # ax=fig.add_subplot(2,1,2)
+    # plt.contourf(xm,zh[0,:,0,:]/1000.0,w[k,:-1,0,:],np.arange(-0.1,0.11,0.01),cmap='seismic')
+    # #plt.pcolormesh(xm,zm,w[k,:-1,0,:],cmap='seismic',vmin=-0.05, vmax=0.05)
+    # #plt.pcolormesh(xm,zh[0,:,0,:]/1000.0,w[k,:-1,0,:],cmap='seismic',vmin=-0.1, vmax=0.1)
+    # plt.colorbar(label=r'Vertical velocity (m $\rms^{-1}$)')
+    # #plt.title(time2[k],name='Arial',size=20)
+    # plt.xlabel('X Domain (km)')
+    # plt.ylabel('Height (km)')
+    # #ax.set_xlim([-2968,2968])
+    # ax.set_xlim([-1000,1000])
+    # ax.set_ylim([0,7])
+    # ax.tick_params('both', length=8, width=1, which='major')
     
     # #vertical motion cm1
     # ax=fig.add_subplot(2,1,2)
@@ -2079,14 +2127,16 @@ for k in range(0,len(time)-defasagem,1):
     # ax.set_ylim([0,4])
     # plt.grid(True)
     
-    # ax=fig.add_subplot(1,1,1)
-    # wndspeed = np.sqrt(np.array(v[:,:,0:2,:])**2   +  np.array(u[:,:,0:2,:-1])**2)
-    # plt.plot(wndspeed[k,:,0,xposition],z)
-    # #plt.title(time2[k] + '     ' +str(int(solrad[k,0,0])) ,name='Arial',weight='bold',size=20)
-    # plt.xlabel(r'Wind speed (m $\rms^{-1}$)',name='Arial',size=16)
-    # plt.ylabel('Height (km)',name='Arial',weight='bold',size=16,style='italic')
-    # ax.set_xlim([0,20])
-    # ax.set_ylim([0,5])
+    #Wind speed profile
+    ax=fig.add_subplot(1,1,1)
+    wndspeed = np.sqrt(np.array(v[:,:,0:2,:])**2   +  np.array(u[:,:,0:2,:-1])**2)
+    plt.plot(wndspeed[k,:,0,xposition],z)
+    #plt.title(time2[k] + '     ' +str(int(solrad[k,0,0])) ,name='Arial',weight='bold',size=20)
+    plt.xlabel(r'Wind speed (m $\rms^{-1}$)',name='Arial')
+    plt.ylabel('Height (km)',name='Arial')
+    ax.set_xlim([0,20])
+    ax.set_ylim([0,5])
+    ax.tick_params('both', length=8, width=1, which='major')
     
     
     # ax=fig.add_subplot(2,1,2)
@@ -2396,16 +2446,16 @@ for k in range(0,len(time)-defasagem,1):
     # ax.set_ylim([0,7])
     
     
-    ax=fig.add_subplot(2,1,2)
-    plt.contourf(xm,zm,Bw[k,:-1,0,:],np.arange(-0.56,0.56,0.005),cmap='seismic')
-    #plt.contourf(xm,zh[0,:,0,:]/1000.0,T[k,:,0,:],np.arange(205,315,2),cmap='CMRmap')
-    plt.colorbar(label='Buoyancy')
-    #plt.title(time1[k],name='Arial',weight='bold',size=20)
-    plt.xlabel('X Domain (km)',name='Arial',weight='bold',size=16,style='italic')
-    plt.ylabel('Height (km)',name='Arial',weight='bold',size=16,style='italic')
-    #ax.set_ylim([0,14])
-    ax.set_xlim([-1000,1000])
-    ax.set_ylim([0,7])
+    # ax=fig.add_subplot(2,1,2)
+    # plt.contourf(xm,zm,Bw[k,:-1,0,:],np.arange(-0.56,0.56,0.005),cmap='seismic')
+    # #plt.contourf(xm,zh[0,:,0,:]/1000.0,T[k,:,0,:],np.arange(205,315,2),cmap='CMRmap')
+    # plt.colorbar(label='Buoyancy')
+    # #plt.title(time1[k],name='Arial',weight='bold',size=20)
+    # plt.xlabel('X Domain (km)',name='Arial',weight='bold',size=16,style='italic')
+    # plt.ylabel('Height (km)',name='Arial',weight='bold',size=16,style='italic')
+    # #ax.set_ylim([0,14])
+    # ax.set_xlim([-1000,1000])
+    # ax.set_ylim([0,7])
     
     # ax=fig.add_subplot(2,1,1)
     # plt.contourf(xm,zm,(PGFpertwPi + Bw)[k,:-1,0,:],np.arange(-0.00035,0.00036,0.00002),cmap='seismic')
@@ -2574,11 +2624,12 @@ for k in range(0,len(time)-defasagem,1):
 
     
     
-    plt.subplots_adjust(bottom=0.07, top=0.93, hspace=0.2)
+    plt.subplots_adjust(bottom=0.08, top=0.93, hspace=0.2)
+    #plt.subplots_adjust(bottom=0.07, top=0.93, hspace=0.2, right=0.745)
     plt.pause(0.5)
     nameoffigure = time2[k] #+ "0"
     string_in_string = "{}".format(nameoffigure)
-    plt.savefig("/home/owner/Documents/LLJConvection/cm1model/figures/"+string_in_string)
+    plt.savefig("/home/owner/Documents/LLJConvection/cm1model/figures/"+string_in_string,dpi=300)
     plt.close()
     
     
