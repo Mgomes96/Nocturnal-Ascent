@@ -99,7 +99,7 @@ for var in vars:
 
 #133 
 #172      
-limit = 10000
+limit = 95
 #rain = vars['rain'][:limit]
 #P= vars['prs'][:limit] #pressure
 #Ppert= vars['prspert'][:limit] #pressure perturbation
@@ -116,25 +116,25 @@ PGFpertwPi = vars['wb_pgrad'][:limit] #pressure gradient term in the CM1 w equat
 # hidiffw = vars['wb_hidiff'][:limit] #horizontal diffusion term in the w equation
 # vidiffw = vars['wb_vidiff'][:limit] #vertical diffusion term in the w equation
 
-# PGFpertuPi = vars['ub_pgrad'][:limit] #pressure gradient term in the CM1 u equation
-# fcoru = vars['ub_cor'][:limit] #coriolis term in the CM1 u equation
-# urdamp = vars['ub_rdamp'][:limit] #rayleigh damping term in the CM1 u equation
-# hadvu = vars['ub_hadv'][:limit] #horizontal advection in the CM1 u equation
-# vadvu = vars['ub_vadv'][:limit] #vertical advection in the CM1 u equation
-# # uhturb = vars['ub_hturb'][:limit] #horizontal turbulence tendency in the CM1 u equation
-# # uvturb = vars['ub_vturb'][:limit] #vertical turbulence tendency in the CM1 u equation
-# upblten = vars['ub_pbl'][:limit] #pbl tendency in the CM1 u equation
-# uidiff = vars['ub_hidiff'][:limit] #Diffusion (incuding artificial) in the CM1 u equation
+PGFpertuPi = vars['ub_pgrad'][:limit] #pressure gradient term in the CM1 u equation
+fcoru = vars['ub_cor'][:limit] #coriolis term in the CM1 u equation
+urdamp = vars['ub_rdamp'][:limit] #rayleigh damping term in the CM1 u equation
+hadvu = vars['ub_hadv'][:limit] #horizontal advection in the CM1 u equation
+vadvu = vars['ub_vadv'][:limit] #vertical advection in the CM1 u equation
+# uhturb = vars['ub_hturb'][:limit] #horizontal turbulence tendency in the CM1 u equation
+# uvturb = vars['ub_vturb'][:limit] #vertical turbulence tendency in the CM1 u equation
+upblten = vars['ub_pbl'][:limit] #pbl tendency in the CM1 u equation
+uidiff = vars['ub_hidiff'][:limit] #Diffusion (incuding artificial) in the CM1 u equation
 
-# PGFpertvPi = vars['vb_pgrad'][:limit] #pressure gradient term in the CM1 v equation
-# fcorv = vars['vb_cor'][:limit] #coriolis term in the CM1 v equation
-# vrdamp = vars['vb_rdamp'][:limit] #rayleigh damping term in the CM1 v equation
-# hadvv = vars['vb_hadv'][:limit] #horizontal advection in the CM1 v equation
-# vadvv = vars['vb_vadv'][:limit] #vertical advection in the CM1 v equation
-# # vhturb = vars['vb_hturb'][:limit] #horizontal turbulence tendency in the CM1 v equation
-# # vvturb = vars['vb_vturb'][:limit] #vertical turbulence tendency in the CM1 v equation
-# vpblten = vars['vb_pbl'][:limit] #pbl tendency in the CM1 v equation
-# vidiff = vars['vb_hidiff'][:limit] #Diffusion (incuding artificial) in the CM1 v equation
+PGFpertvPi = vars['vb_pgrad'][:limit] #pressure gradient term in the CM1 v equation
+fcorv = vars['vb_cor'][:limit] #coriolis term in the CM1 v equation
+vrdamp = vars['vb_rdamp'][:limit] #rayleigh damping term in the CM1 v equation
+hadvv = vars['vb_hadv'][:limit] #horizontal advection in the CM1 v equation
+vadvv = vars['vb_vadv'][:limit] #vertical advection in the CM1 v equation
+# vhturb = vars['vb_hturb'][:limit] #horizontal turbulence tendency in the CM1 v equation
+# vvturb = vars['vb_vturb'][:limit] #vertical turbulence tendency in the CM1 v equation
+vpblten = vars['vb_pbl'][:limit] #pbl tendency in the CM1 v equation
+vidiff = vars['vb_hidiff'][:limit] #Diffusion (incuding artificial) in the CM1 v equation
 
 
 #th_hadv= vars['ptb_hadv'][:] #Horizontal advection of potential temperature
@@ -260,7 +260,7 @@ for k in range(0,len(time2)):
 fig = plt.figure(figsize=(20,15))
 #plt.figtext(0.30, 0.90, "\u263c", fontsize='large', color='y', ha ='right')
 # plt.title(r'U$_\max$ = 5 m $\rms^{-1}$        U$_\min$ = 5 m $\rms^{-1}$',x=0.5, y=1.02)
-plt.rcParams.update({"font.size": 47})
+plt.rcParams.update({"font.size": 41})
 plt.rcParams['axes.linewidth'] = 2
 plt.plot(theta[0,:,0,0],z,linewidth=5,color='crimson')
 plt.xlabel("Potential Temperature (K)")
@@ -269,7 +269,7 @@ plt.ylim([0,14])
 plt.xlim([290,370])
 plt.grid('True')
 plt.tick_params('both', length=15, width=2, which='major')
-plt.subplots_adjust(bottom=0.13, top=0.98, hspace=0.15, right=0.95,left=0.1)
+plt.subplots_adjust(bottom=0.11, top=0.98, hspace=0.15, right=0.95,left=0.1)
 plt.savefig('/home/owner/Documents/LLJConvection/cm1model/python_figure',dpi=100)
 im = Image.open('/home/owner/Documents/LLJConvection/cm1model/python_figure.png')    
 im.show()  
@@ -329,7 +329,7 @@ plt.contourf(xm,zh[0,:,0,:]/1000.0,w[st_time,:-1,0,:],np.arange(-0.05,0.055,0.00
 #plt.colorbar(label=r'Vertical velocity (m $\rms^{-1}$)')
 #plt.title(time2[k],name='Arial',size=20)
 #plt.xlabel('X Domain (km)',name='Arial',size=16)
-plt.ylabel('Height (km)',name='Arial',size=20)
+plt.ylabel('z (km)',name='Arial',size=20)
 ax.set_xlim([-500,500])
 ax.set_ylim([0,6])
 plt.tick_params(labelbottom = False, bottom = False)
@@ -341,7 +341,7 @@ plt.contourf(xm,zh[0,:,0,:]/1000.0,w[st_time+intval,:-1,0,:],np.arange(-0.05,0.0
 #plt.colorbar(label=r'Vertical velocity (m $\rms^{-1}$)')
 #plt.title(time2[k],name='Arial',size=20)
 #plt.xlabel('X Domain (km)',name='Arial',size=16)
-plt.ylabel('Height (km)',name='Arial',size=20)
+plt.ylabel('z (km)',name='Arial',size=20)
 ax.set_xlim([-500,500])
 ax.set_ylim([0,6])
 plt.tick_params(labelbottom = False, bottom = False)
@@ -353,7 +353,7 @@ plt.contourf(xm,zh[0,:,0,:]/1000.0,w[st_time+2*intval,:-1,0,:],np.arange(-0.05,0
 #plt.colorbar(label=r'Vertical velocity (m $\rms^{-1}$)')
 #plt.title(time2[k],name='Arial',size=20)
 #plt.xlabel('X Domain (km)',name='Arial',size=16)
-plt.ylabel('Height (km)',name='Arial',size=20)
+plt.ylabel('z (km)',name='Arial',size=20)
 ax.set_xlim([-500,500])
 ax.set_ylim([0,6])
 plt.tick_params(labelbottom = False, bottom = False)
@@ -365,7 +365,7 @@ plt.contourf(xm,zh[0,:,0,:]/1000.0,w[st_time+3*intval,:-1,0,:],np.arange(-0.05,0
 #plt.colorbar(label=r'Vertical velocity (m $\rms^{-1}$)')
 #plt.title(time2[k],name='Arial',size=20)
 #plt.xlabel('X Domain (km)',name='Arial',size=16)
-plt.ylabel('Height (km)',name='Arial',size=20)
+plt.ylabel('z (km)',name='Arial',size=20)
 ax.set_xlim([-500,500])
 ax.set_ylim([0,6])
 plt.tick_params(labelbottom = False, bottom = False)
@@ -377,7 +377,7 @@ plt.contourf(xm,zh[0,:,0,:]/1000.0,w[st_time+4*intval,:-1,0,:],np.arange(-0.05,0
 #plt.colorbar(label=r'Vertical velocity (m $\rms^{-1}$)')
 #plt.title(time2[k],name='Arial',size=20)
 plt.xlabel('x (km)',name='Arial',size=20)
-plt.ylabel('Height (km)',name='Arial',size=20)
+plt.ylabel('z (km)',name='Arial',size=20)
 ax.set_xlim([-500,500])
 ax.set_ylim([0,6])
 plt.text(0.86, 0.9, time2[st_time+4*intval], horizontalalignment='center', verticalalignment='center', transform=ax.transAxes)
@@ -873,7 +873,7 @@ cbar.set_label(r'Vertical velocity (m $\rms^{-1}$)', name='Arial',size=50)
 cbar.ax.tick_params(length=15, width=2,labelsize=50)
 plt.xticks(time[0:len(time)-reducao:6], time2[0:len(time)-reducao:6], rotation='vertical',size=40)
 plt.yticks(size=50)
-plt.ylabel('Height (km)',size=50)
+plt.ylabel('z (km)',size=50)
 #plt.yticks(fontsize = 30) 
 plt.gcf().autofmt_xdate()
 plt.ylim([0,5])
@@ -1940,14 +1940,14 @@ bwr_custom_thpert2 = custom_div_cmap2(30)
     
 
 #Animation of U or V winds, potential temperature and pressure (xz section)
-inicio = 47
-final = 48 #len(time)
+inicio = 92
+final = 93 #len(time)
 xm,zm=np.meshgrid(xh,z)
 
 for k in range(inicio,final,1):     #usually start at 0
 
     
-    fig=plt.figure(figsize=(12,12))
+    fig=plt.figure(figsize=(30,30))
     plt.rcParams.update({"font.size": 30})
     plt.rcParams['axes.linewidth'] = 2
     #fig.suptitle(time2[k],name='Arial',size=20)
@@ -2166,16 +2166,16 @@ for k in range(inicio,final,1):     #usually start at 0
 # #    ax.set_xlim([-2968,2968])
     
     
-    # ax=fig.add_subplot(2,1,1)
-    # plt.plot(u[k,:,0,xposition],z,linewidth=3,color="crimson")
-    # #plt.title(time2[k] + '     ' +str(int(solrad[k,0,0])) ,name='Arial',weight='bold',size=20)
-    # # plt.title(time2[k],name='Arial',size=20)
-    # plt.xlabel(r'u (m $\rms^{-1}$) ',size=30)
-    # plt.ylabel('z (km)',name='Arial',size=30)
-    # ax.set_xlim([-10,20])
-    # ax.set_ylim([0,4])
-    # ax.tick_params('both', length=15, width=2, which='major')
-    # plt.grid(True)
+    ax=fig.add_subplot(2,2,1)
+    plt.plot(u[k,:,0,xposition],z,linewidth=3,color="crimson")
+    #plt.title(time2[k] + '     ' +str(int(solrad[k,0,0])) ,name='Arial',weight='bold',size=20)
+    # plt.title(time2[k],name='Arial',size=20)
+    plt.xlabel(r'u (m $\rms^{-1}$) ',size=30)
+    plt.ylabel('z (km)',name='Arial',size=30)
+    ax.set_xlim([-10,20])
+    ax.set_ylim([0,4])
+    ax.tick_params('both', length=15, width=2, which='major')
+    plt.grid(True)
     
     
     # ax=fig.add_subplot(2,2,1)
@@ -2188,27 +2188,27 @@ for k in range(inicio,final,1):     #usually start at 0
     # ax.tick_params('both', length=15, width=2, which='major')
     # plt.grid(True)
     
-    # ax=fig.add_subplot(2,1,2)
-    # plt.plot(v[k,:,0,xposition],z,linewidth=3,color="crimson")
-    # #plt.title(time2[k] + '     ' +str(int(solrad[k,0,0])) ,name='Arial',weight='bold',size=20)
-    # plt.xlabel(r'v (m $\rms^{-1}$)',size=30)
-    # plt.ylabel('z (km)',size=30)
-    # ax.set_xlim([-10,20])
-    # ax.set_ylim([0,4])
-    # ax.tick_params('both', length=15, width=2, which='major')
-    # plt.grid(True)
-    
-    #Wind speed profile
-    ax=fig.add_subplot(1,1,1)
-    wndspeed = np.sqrt(np.array(v[:,:,0:2,:])**2   +  np.array(u[:,:,0:2,:-1])**2)
-    plt.plot(wndspeed[k,:,0,xposition],z,linewidth=5,color="crimson")
+    ax=fig.add_subplot(2,2,2)
+    plt.plot(v[k,:,0,xposition],z,linewidth=3,color="crimson")
     #plt.title(time2[k] + '     ' +str(int(solrad[k,0,0])) ,name='Arial',weight='bold',size=20)
-    plt.xlabel(r'Wind speed (m $\rms^{-1}$)',size=30)
+    plt.xlabel(r'v (m $\rms^{-1}$)',size=30)
     plt.ylabel('z (km)',size=30)
-    ax.set_xlim([0,20])
-    ax.set_ylim([0,5])
+    ax.set_xlim([-10,20])
+    ax.set_ylim([0,4])
     ax.tick_params('both', length=15, width=2, which='major')
     plt.grid(True)
+    
+    #Wind speed profile
+    # ax=fig.add_subplot(1,1,1)
+    # wndspeed = np.sqrt(np.array(v[:,:,0:2,:])**2   +  np.array(u[:,:,0:2,:-1])**2)
+    # plt.plot(wndspeed[k,:,0,xposition],z,linewidth=5,color="crimson")
+    # #plt.title(time2[k] + '     ' +str(int(solrad[k,0,0])) ,name='Arial',weight='bold',size=20)
+    # plt.xlabel(r'Wind speed (m $\rms^{-1}$)',size=30)
+    # plt.ylabel('z (km)',size=30)
+    # ax.set_xlim([0,20])
+    # ax.set_ylim([0,5])
+    # ax.tick_params('both', length=15, width=2, which='major')
+    # plt.grid(True)
     
     
     # ax=fig.add_subplot(2,1,2)
@@ -2227,40 +2227,40 @@ for k in range(inicio,final,1):     #usually start at 0
     # ax.set_xlim([-0.0015,0.0015])
     # ax.set_ylim([0,5])
     
-    # ax=fig.add_subplot(2,2,4)
-    # plt.plot(upblten[k,:,0,xposition],z,label='Turbulence',linewidth=2)
-    # plt.plot(fcoru[k,:,0,xposition] - initPGF[k,:,0,xposition],z,label='Coriolis + init PGF',linewidth=2)
-    # plt.plot(PGFpertuPi[k,:,0,xposition],z,label='PPGF',linewidth=2)
-    # plt.plot(urdamp[k,:,0,xposition],z,label='Rayleigh Damping',linewidth=2)
-    # plt.plot(hadvu[k,:,0,xposition],z,label='Horizontal advection',linewidth=2)
-    # plt.plot(vadvu[k,:,0,xposition],z,label='Vertical advection',linewidth=2)
-    # plt.plot(uidiff[k,:,0,xposition],z,label='Artificial diffusion',linewidth=2)
-    # # plt.plot(uhturb[k,:,0,xposition],z,label='Horizontal Turbulence')
-    # # plt.plot(uvturb[k,:,0,xposition],z,label='Vertical Turbulence')
-    # plt.legend(fontsize=16.5)
-    # #plt.title(time2[k] + '     ' +str(int(solrad[k,0,0])) ,name='Arial',weight='bold',size=20)
-    # plt.xlabel(r'u terms (m $\rms^{-2}$)',size=30)
-    # plt.ylabel('z (km)',size=30)
-    # ax.set_xlim([-0.0015,0.0015])
-    # ax.set_ylim([0,4])
-    # ax.tick_params('both', length=15, width=2, which='major')
-    # ax.ticklabel_format(axis='both', style='sci',scilimits=(0,0),useMathText=True)
-    # ax.xaxis.get_offset_text().set_fontsize(fontsize=30)
-    # plt.grid(True)
+    ax=fig.add_subplot(2,2,3)
+    plt.plot(upblten[k,:,0,xposition],z,label='Turbulence',linewidth=2)
+    plt.plot(fcoru[k,:,0,xposition] - initPGF[k,:,0,xposition],z,label='Coriolis + init PGF',linewidth=2)
+    plt.plot(PGFpertuPi[k,:,0,xposition],z,label='PPGF',linewidth=2)
+    plt.plot(urdamp[k,:,0,xposition],z,label='Rayleigh Damping',linewidth=2)
+    plt.plot(hadvu[k,:,0,xposition],z,label='Horiz advection',linewidth=2)
+    plt.plot(vadvu[k,:,0,xposition],z,label='Vertical advection',linewidth=2)
+    plt.plot(uidiff[k,:,0,xposition],z,label='Artificial diffusion',linewidth=2)
+    # plt.plot(uhturb[k,:,0,xposition],z,label='Horizontal Turbulence')
+    # plt.plot(uvturb[k,:,0,xposition],z,label='Vertical Turbulence')
+    #plt.legend(fontsize=17)
+    #plt.title(time2[k] + '     ' +str(int(solrad[k,0,0])) ,name='Arial',weight='bold',size=20)
+    plt.xlabel(r'u-eqn terms (m $\rms^{-2}$)',size=30)
+    plt.ylabel('z (km)',size=30)
+    ax.set_xlim([-0.0015,0.0015])
+    ax.set_ylim([0,4])
+    ax.tick_params('both', length=15, width=2, which='major')
+    ax.ticklabel_format(axis='both', style='sci',scilimits=(0,0),useMathText=True)
+    ax.xaxis.get_offset_text().set_fontsize(fontsize=30)
+    plt.grid(True)
     
     # ax=fig.add_subplot(2,2,3)
     # plt.plot(upblten[k,:,0,xposition2],z,label='Turbulence',linewidth=2)
     # plt.plot(fcoru[k,:,0,xposition2] - initPGF[k,:,0,xposition],z,label='Coriolis + init PGF',linewidth=2)
     # plt.plot(PGFpertuPi[k,:,0,xposition2],z,label='PPGF',linewidth=2)
     # plt.plot(urdamp[k,:,0,xposition2],z,label='Rayleigh Damping',linewidth=2)
-    # plt.plot(hadvu[k,:,0,xposition2],z,label='Horizontal advection',linewidth=2)
+    # plt.plot(hadvu[k,:,0,xposition2],z,label='Horiz advection',linewidth=2)
     # plt.plot(vadvu[k,:,0,xposition2],z,label='Vertical advection',linewidth=2)
     # plt.plot(uidiff[k,:,0,xposition2],z,label='Artificial diffusion',linewidth=2)
     # # plt.plot(uhturb[k,:,0,xposition],z,label='Horizontal Turbulence')
     # # plt.plot(uvturb[k,:,0,xposition],z,label='Vertical Turbulence')
-    # #plt.legend(fontsize=16.5)
+    # #plt.legend(fontsize=17)
     # #plt.title(time2[k] + '     ' +str(int(solrad[k,0,0])) ,name='Arial',weight='bold',size=20)
-    # plt.xlabel(r'u terms (m $\rms^{-2}$)',size=30)
+    # plt.xlabel(r'u-eqn terms (m $\rms^{-2}$)',size=30)
     # plt.ylabel('z (km)',name='Arial',size=30)
     # ax.set_xlim([-0.0015,0.0015])
     # ax.set_ylim([0,4])
@@ -2270,26 +2270,26 @@ for k in range(inicio,final,1):     #usually start at 0
     # plt.grid(True)
     
     
-    # ax=fig.add_subplot(2,2,4)
-    # plt.plot(vpblten[k,:,0,xposition],z,label='Turbulence',linewidth=2)
-    # plt.plot(fcorv[k,:,0,xposition],z,label='Coriolis + init PGF',linewidth=2)
-    # plt.plot(PGFpertvPi[k,:,0,xposition],z,label='PPGF',linewidth=2)
-    # plt.plot(vrdamp[k,:,0,xposition],z,label='Rayleigh Damping',linewidth=2)
-    # plt.plot(hadvv[k,:,0,xposition],z,label='Horizontal advection',linewidth=2)
-    # plt.plot(vadvv[k,:,0,xposition],z,label='Vertical advection',linewidth=2)
-    # plt.plot(vidiff[k,:,0,xposition],z,label='Artificial diffusion',linewidth=2)
-    # # plt.plot(uhturb[k,:,0,xposition],z,label='Horizontal Turbulence')
-    # # plt.plot(uvturb[k,:,0,xposition],z,label='Vertical Turbulence')
-    # plt.legend(fontsize=16.5)
-    # #plt.title(time2[k] + '     ' +str(int(solrad[k,0,0])) ,name='Arial',weight='bold',size=20)
-    # plt.xlabel(r'v terms (m $\rms^{-2}$)',size=30)
-    # plt.ylabel('Height (km)',size=30)
-    # ax.set_xlim([-0.0015,0.0015])
-    # ax.set_ylim([0,4])
-    # ax.tick_params('both', length=15, width=2, which='major')
-    # ax.ticklabel_format(axis='both', style='sci',scilimits=(0,0),useMathText=True)
-    # ax.xaxis.get_offset_text().set_fontsize(fontsize=30)
-    # plt.grid(True)
+    ax=fig.add_subplot(2,2,4)
+    plt.plot(vpblten[k,:,0,xposition],z,label='Turbulence',linewidth=2)
+    plt.plot(fcorv[k,:,0,xposition],z,label='Coriolis + init PGF',linewidth=2)
+    plt.plot(PGFpertvPi[k,:,0,xposition],z,label='PPGF',linewidth=2)
+    plt.plot(vrdamp[k,:,0,xposition],z,label='Rayleigh Damping',linewidth=2)
+    plt.plot(hadvv[k,:,0,xposition],z,label='Horiz advection',linewidth=2)
+    plt.plot(vadvv[k,:,0,xposition],z,label='Vertical advection',linewidth=2)
+    plt.plot(vidiff[k,:,0,xposition],z,label='Artificial diffusion',linewidth=2)
+    # plt.plot(uhturb[k,:,0,xposition],z,label='Horizontal Turbulence')
+    # plt.plot(uvturb[k,:,0,xposition],z,label='Vertical Turbulence')
+    plt.legend(fontsize=17)
+    #plt.title(time2[k] + '     ' +str(int(solrad[k,0,0])) ,name='Arial',weight='bold',size=20)
+    plt.xlabel(r'v-eqn terms (m $\rms^{-2}$)',size=30)
+    plt.ylabel('Height (km)',size=30)
+    ax.set_xlim([-0.0015,0.0015])
+    ax.set_ylim([0,4])
+    ax.tick_params('both', length=15, width=2, which='major')
+    ax.ticklabel_format(axis='both', style='sci',scilimits=(0,0),useMathText=True)
+    ax.xaxis.get_offset_text().set_fontsize(fontsize=30)
+    plt.grid(True)
     
     
     
@@ -2705,7 +2705,7 @@ for k in range(inicio,final,1):     #usually start at 0
 
     
     
-    plt.subplots_adjust(bottom=0.15, top=0.98, hspace=0.4,right=0.93,left=0.12)
+    plt.subplots_adjust(bottom=0.13, top=0.98, hspace=0.35,right=0.98,left=0.07)
     #plt.subplots_adjust(bottom=0.07, top=0.93, hspace=0.2, right=0.745)
     plt.pause(0.5)
     nameoffigure = time2[k] #+ "0"
