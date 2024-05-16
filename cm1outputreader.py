@@ -49,6 +49,29 @@ xparcel= vars['x'][:]
 yparcel= vars['y'][:]
 zparcel= vars['z'][:]
 
+time= vars['time'][:]
+
+
+#Converts from seconds to readable time
+def convert(timeinsecs):
+   time = timeinsecs
+   day = time // (24 * 3600)
+   time = time % (24 * 3600)
+   hour = time // 3600
+   time %= 3600
+   minutes = time // 60
+   time %= 60
+   seconds = time
+   return("Day %d at %d:%d" % (day, hour, minutes))
+
+
+#Makes a readable time array (different from time1)
+time2=[]
+for k in range(0,len(time)):
+    time2.append(convert(time[k]+1800+86400))
+time2=np.array(time2)
+
+
 
 #%%
 ########################################################################################################################
@@ -99,14 +122,14 @@ for var in vars:
 
 #133 
 #172      
-limit = 95
+limit = 9999999999999999999
 #rain = vars['rain'][:limit]
 #P= vars['prs'][:limit] #pressure
 #Ppert= vars['prspert'][:limit] #pressure perturbation
 #Pi= vars['pi'][:limit] #nondimensional pressure (exner function)
 #Pipert= vars['pipert'][:limit] #nondimensional pressure perturbation (exner function
 
-PGFpertwPi = vars['wb_pgrad'][:limit] #pressure gradient term in the CM1 w equation
+#PGFpertwPi = vars['wb_pgrad'][:limit] #pressure gradient term in the CM1 w equation
 #Bw = vars['wb_buoy'][:limit] #buoyancy in the CM1 w equation
 #hadvw = vars['wb_hadv'][:limit] #horizontal advection in the CM1 w equation
 #vadvw = vars['wb_vadv'][:limit] #vertical advection in the CM1 w equation
@@ -116,25 +139,25 @@ PGFpertwPi = vars['wb_pgrad'][:limit] #pressure gradient term in the CM1 w equat
 # hidiffw = vars['wb_hidiff'][:limit] #horizontal diffusion term in the w equation
 # vidiffw = vars['wb_vidiff'][:limit] #vertical diffusion term in the w equation
 
-PGFpertuPi = vars['ub_pgrad'][:limit] #pressure gradient term in the CM1 u equation
-fcoru = vars['ub_cor'][:limit] #coriolis term in the CM1 u equation
-urdamp = vars['ub_rdamp'][:limit] #rayleigh damping term in the CM1 u equation
-hadvu = vars['ub_hadv'][:limit] #horizontal advection in the CM1 u equation
-vadvu = vars['ub_vadv'][:limit] #vertical advection in the CM1 u equation
-# uhturb = vars['ub_hturb'][:limit] #horizontal turbulence tendency in the CM1 u equation
-# uvturb = vars['ub_vturb'][:limit] #vertical turbulence tendency in the CM1 u equation
-upblten = vars['ub_pbl'][:limit] #pbl tendency in the CM1 u equation
-uidiff = vars['ub_hidiff'][:limit] #Diffusion (incuding artificial) in the CM1 u equation
+# PGFpertuPi = vars['ub_pgrad'][:limit] #pressure gradient term in the CM1 u equation
+# fcoru = vars['ub_cor'][:limit] #coriolis term in the CM1 u equation
+# urdamp = vars['ub_rdamp'][:limit] #rayleigh damping term in the CM1 u equation
+# hadvu = vars['ub_hadv'][:limit] #horizontal advection in the CM1 u equation
+# vadvu = vars['ub_vadv'][:limit] #vertical advection in the CM1 u equation
+# # uhturb = vars['ub_hturb'][:limit] #horizontal turbulence tendency in the CM1 u equation
+# # uvturb = vars['ub_vturb'][:limit] #vertical turbulence tendency in the CM1 u equation
+# upblten = vars['ub_pbl'][:limit] #pbl tendency in the CM1 u equation
+# uidiff = vars['ub_hidiff'][:limit] #Diffusion (incuding artificial) in the CM1 u equation
 
-PGFpertvPi = vars['vb_pgrad'][:limit] #pressure gradient term in the CM1 v equation
-fcorv = vars['vb_cor'][:limit] #coriolis term in the CM1 v equation
-vrdamp = vars['vb_rdamp'][:limit] #rayleigh damping term in the CM1 v equation
-hadvv = vars['vb_hadv'][:limit] #horizontal advection in the CM1 v equation
-vadvv = vars['vb_vadv'][:limit] #vertical advection in the CM1 v equation
-# vhturb = vars['vb_hturb'][:limit] #horizontal turbulence tendency in the CM1 v equation
-# vvturb = vars['vb_vturb'][:limit] #vertical turbulence tendency in the CM1 v equation
-vpblten = vars['vb_pbl'][:limit] #pbl tendency in the CM1 v equation
-vidiff = vars['vb_hidiff'][:limit] #Diffusion (incuding artificial) in the CM1 v equation
+# PGFpertvPi = vars['vb_pgrad'][:limit] #pressure gradient term in the CM1 v equation
+# fcorv = vars['vb_cor'][:limit] #coriolis term in the CM1 v equation
+# vrdamp = vars['vb_rdamp'][:limit] #rayleigh damping term in the CM1 v equation
+# hadvv = vars['vb_hadv'][:limit] #horizontal advection in the CM1 v equation
+# vadvv = vars['vb_vadv'][:limit] #vertical advection in the CM1 v equation
+# # vhturb = vars['vb_hturb'][:limit] #horizontal turbulence tendency in the CM1 v equation
+# # vvturb = vars['vb_vturb'][:limit] #vertical turbulence tendency in the CM1 v equation
+# vpblten = vars['vb_pbl'][:limit] #pbl tendency in the CM1 v equation
+# vidiff = vars['vb_hidiff'][:limit] #Diffusion (incuding artificial) in the CM1 v equation
 
 
 #th_hadv= vars['ptb_hadv'][:] #Horizontal advection of potential temperature
@@ -1648,9 +1671,9 @@ plt.plot(time,meankenergy)
 #Calculating the maximum vertical parcel displacements for every 24 hour period
 reference = -99999999
 for k in range (0,len(zparcel[0])):
-    for t in range(0,len(time)-21+2-4-2-8):
+    for t in range(0,len(time)-11):
         counter = 0
-        while counter < 19:
+        while counter < 24 and (t+counter)!=len(time)-1-11:   #the -1 is necessary and the -11 is so it ends on day 5 at 4:30
             if abs(zparcel[t][k]-zparcel[t+1+counter][k]) > reference:
                 max_displacement = abs(zparcel[t][k]-zparcel[t+1+counter][k])
                 initial_time_index = t
@@ -1664,7 +1687,8 @@ for k in range (0,len(zparcel[0])):
                 
             counter = counter + 1
     print (k)
-        
+
+print ("parcel_index = ", parcel_index)    
 print ("max_displacement = ", max_displacement) 
 print ("initial_time = ", time2[initial_time_index])       
 print ("final_time = ", time2[final_time_index])
