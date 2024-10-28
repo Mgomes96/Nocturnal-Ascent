@@ -312,14 +312,14 @@ plt.rcParams['axes.linewidth'] = 2
 T = (theta[0,:,0,0]/((100000/P[0,:,0,0])**(2/7)))-273.15
 skew=plots.SkewT(fig)
 skew.plot(P[0,:,0,0]/100,T,"red",linewidth=5)
-#plt.xlabel("Potential Temperature (K)")
-#plt.ylabel('z (km)')
+plt.xlabel(r"Temperature ($\rm^{o}C$)")
+plt.ylabel('Pressure (hPa)')
 # plt.ylim([0,14])
 # plt.xlim([290,370])
 #plt.grid('True')
 plt.tick_params('both', length=15, width=2, which='major')
 #plt.subplots_adjust(bottom=0.11, top=0.98, hspace=0.15, right=0.95,left=0.1)
-plt.savefig('/home/owner/Documents/LLJConvection/cm1model/python_figure',dpi=100)
+plt.savefig('/home/owner/Documents/LLJConvection/cm1model/python_figure',dpi=300)
 im = Image.open('/home/owner/Documents/LLJConvection/cm1model/python_figure.png')    
 im.show()  
 plt.close()
@@ -366,7 +366,7 @@ plt.show()
 #%%
 
 #Plots panel of W like in Shapiro et al 2018
-st_time = 89 # 67
+st_time = 89 # 67  #89
 intval = 2
 xm,zm=np.meshgrid(xh,z)
 fig=plt.figure(figsize=(10,10))
@@ -438,7 +438,7 @@ cbar_ax = fig.add_axes([0.82, 0.15, 0.03, 0.7])
 cbar = fig.colorbar(plt.contourf(xm,zh[0,:,0,:]/1000.0,w[94,:-1,0,:],np.arange(-0.05,0.055,0.005),cmap='seismic'), cax=cbar_ax)
 cbar.ax.tick_params(length=9, width=2)
 cbar.set_label(r'Vertical velocity (m $\rms^{-1}$)',size=20)
-plt.savefig('/home/owner/Documents/LLJConvection/cm1model/python_figure',dpi=100)
+plt.savefig('/home/owner/Documents/LLJConvection/cm1model/python_figure',dpi=300)
 im = Image.open('/home/owner/Documents/LLJConvection/cm1model/python_figure.png')    
 im.show()  
 plt.close()
@@ -838,7 +838,7 @@ plt.subplots_adjust( top=0.98, hspace=0.15, right=1.05,left=0.13)
 #plt.clabel(field,inline=False,fontsize=8,colors='k')
 #plt.ylabel('Height (km)',name='Arial',weight='bold',size=16,style='italic')
 #plt.show()
-plt.savefig('/home/owner/Documents/LLJConvection/cm1model/python_figure',dpi=100)
+plt.savefig('/home/owner/Documents/LLJConvection/cm1model/python_figure',dpi=300)
 im = Image.open('/home/owner/Documents/LLJConvection/cm1model/python_figure.png')    
 im.show()  
 plt.close()
@@ -934,7 +934,7 @@ plt.tick_params('both', length=15, width=2, which='major')
 
 
 
-plt.savefig('/home/owner/Documents/LLJConvection/cm1model/python_figure',dpi=100)
+plt.savefig('/home/owner/Documents/LLJConvection/cm1model/python_figure',dpi=300)
 im = Image.open('/home/owner/Documents/LLJConvection/cm1model/python_figure.png')    
 im.show()  
 plt.close()
@@ -955,7 +955,7 @@ plt.plot(time[:len(time)-reducao],upblten[:len(time)-reducao,29,0,0],linewidth=5
 
 plt.xticks(time[0:len(time)-reducao:6], time2[0:len(time)-reducao:6], rotation='vertical',size=40)
 plt.yticks(size=50)
-plt.ylabel(r'Turbulence effect (m $\rms^{-2}$)',size=50)
+plt.ylabel(r'T$\rm_{u}$',size=50)
 plt.gcf().autofmt_xdate()
 plt.ylim([-0.00012,0.00012])
 plt.tick_params('both', length=15, width=2, which='major')
@@ -1132,11 +1132,11 @@ plt.grid(True)
 plt.rcParams.update({"font.size": 37})
 plt.rcParams['axes.linewidth'] = 2
 plt.figure(figsize=(30,19))
-xposition = 0
+xposition = 328   #328 is 90km east
 init_time = 0  
 final_time = 130  
 sunrise_time = 53  #was 54 for old 40km run
-zposition1 = 29 #height1  was 19 for old 40km run
+zposition1 = 23 #23 for noCloudsJune  29 for noCloudsJunebarotropic
 zposition2 = 94 #height2  was 44 for old 40km run
 
 
@@ -1179,7 +1179,7 @@ plt.quiver(x4[:-1], y4[:-1], x4[1:]-x4[:-1], y4[1:]-y4[:-1], scale_units='xy', a
 
 #----------------------------------------------------------------------
 init_time5 = 95  
-final_time5 = 111 
+final_time5 = 100 #100 for noCloudsJune (reference baroclinic run)  130 for noCloudsJunebarotropic (reference barotropic run)
 
 x5 = u[init_time5:final_time5 + 1,zposition1,0,xposition]
 y5 = v[init_time5:final_time5 + 1,zposition1,0,xposition]
@@ -1190,19 +1190,19 @@ plt.quiver(x5[:-1], y5[:-1], x5[1:]-x5[:-1], y5[1:]-y5[:-1], scale_units='xy', a
 plt.plot([0],[10],color='white',marker='*',markersize=75,markerfacecolor='k')
 plt.xlabel(r'u (m $\rms^{-1}$)',size=60)
 plt.ylabel(r'v (m $\rms^{-1}$)',size=60)
-# plt.xlim([-5,5])
-# plt.ylim([5,15])
+# plt.xlim([-5,5])    #uncomment/comment for barotropic/baroclinic run
+# plt.ylim([5,15])    #uncomment/comment for barotropic/baroclinic run
 plt.axis('equal')
 
-plt.plot(u[5,zposition1,0,0],v[5,zposition1,0,0],color='yellow',marker='$\u263c$',markersize=75,markerfacecolor='yellow')
-plt.plot(u[20,zposition1,0,0],v[20,zposition1,0,0],color='k',marker='$\u263e$',markersize=75,markerfacecolor='k')
-plt.plot(u[5+24,zposition1,0,0],v[5+24,zposition1,0,0],color='yellow',marker='$\u263c$',markersize=75,markerfacecolor='yellow')
-plt.plot(u[20+24,zposition1,0,0],v[20+24,zposition1,0,0],color='k',marker='$\u263e$',markersize=75,markerfacecolor='k')
-plt.plot(u[5+48,zposition1,0,0],v[5+48,zposition1,0,0],color='yellow',marker='$\u263c$',markersize=75,markerfacecolor='yellow')
-plt.plot(u[20+48,zposition1,0,0],v[20+48,zposition1,0,0],color='k',marker='$\u263e$',markersize=75,markerfacecolor='k')
-plt.plot(u[5+72,zposition1,0,0],v[5+72,zposition1,0,0],color='yellow',marker='$\u263c$',markersize=75,markerfacecolor='yellow')
-plt.plot(u[20+72,zposition1,0,0],v[20+72,zposition1,0,0],color='k',marker='$\u263e$',markersize=75,markerfacecolor='k')
-plt.plot(u[5+96,zposition1,0,0],v[5+96,zposition1,0,0],color='yellow',marker='$\u263c$',markersize=75,markerfacecolor='yellow')
+plt.plot(u[5,zposition1,0,xposition],v[5,zposition1,0,xposition],color='yellow',marker='$\u263c$',markersize=75,markerfacecolor='yellow')
+plt.plot(u[20,zposition1,0,xposition],v[20,zposition1,0,xposition],color='k',marker='$\u263e$',markersize=75,markerfacecolor='k')
+plt.plot(u[5+24,zposition1,0,xposition],v[5+24,zposition1,0,xposition],color='yellow',marker='$\u263c$',markersize=75,markerfacecolor='yellow')
+plt.plot(u[20+24,zposition1,0,xposition],v[20+24,zposition1,0,xposition],color='k',marker='$\u263e$',markersize=75,markerfacecolor='k')
+plt.plot(u[5+48,zposition1,0,xposition],v[5+48,zposition1,0,xposition],color='yellow',marker='$\u263c$',markersize=75,markerfacecolor='yellow')
+plt.plot(u[20+48,zposition1,0,xposition],v[20+48,zposition1,0,xposition],color='k',marker='$\u263e$',markersize=75,markerfacecolor='k')
+plt.plot(u[5+72,zposition1,0,xposition],v[5+72,zposition1,0,xposition],color='yellow',marker='$\u263c$',markersize=75,markerfacecolor='yellow')
+plt.plot(u[20+72,zposition1,0,xposition],v[20+72,zposition1,0,xposition],color='k',marker='$\u263e$',markersize=75,markerfacecolor='k')
+#plt.plot(u[5+96,zposition1,0,xposition],v[5+96,zposition1,0,xposition],color='yellow',marker='$\u263c$',markersize=75,markerfacecolor='yellow')
 
 
 #plt.xlim([-4,4])
@@ -1216,7 +1216,7 @@ plt.xticks(ticks=np.arange(-10,12,2))
 plt.subplots_adjust(bottom=0.12, top=0.98, hspace=0.4,right=0.97,left=0.08)
 
 
-plt.savefig('/home/owner/Documents/LLJConvection/cm1model/python_figure',dpi=100)
+plt.savefig('/home/owner/Documents/LLJConvection/cm1model/python_figure',dpi=300)
 im = Image.open('/home/owner/Documents/LLJConvection/cm1model/python_figure.png')    
 im.show()  
 plt.close()
@@ -1709,7 +1709,7 @@ plt.tick_params('both', length=15, width=2, which='major')
 
 plt.subplots_adjust(bottom=0.12, top=0.97, hspace=0.09,right=1.02,left=0.077)
 
-plt.savefig('/home/owner/Documents/LLJConvection/cm1model/python_figure',dpi=100)
+plt.savefig('/home/owner/Documents/LLJConvection/cm1model/python_figure',dpi=300)
 im = Image.open('/home/owner/Documents/LLJConvection/cm1model/python_figure.png')    
 im.show()  
 plt.close()
@@ -2038,19 +2038,19 @@ bwr_custom_thpert2 = custom_div_cmap2(30)
 
 #Animation of U or V winds, potential temperature and pressure (xz section)
 inicio = 0
-final = 100 #len(time)
+final = 105 #len(time)
 xm,zm=np.meshgrid(xh,z)
 
 for k in range(inicio,final,1):     #usually start at 0
 
     
-    fig=plt.figure(figsize=(30,30))  #30,30 for terms  #11,10 for B and theta
+    fig=plt.figure(figsize=(30,30))  #30,30 for terms  #12,12 for B and theta
     plt.rcParams.update({"font.size": 30})
-    plt.rcParams['axes.linewildth'] = 2
+    plt.rcParams['axes.linewidth'] = 2
     #fig.suptitle(time2[k],name='Arial',size=20)
     #plt.figtext(0.30, 0.940, daynight[k], fontsize=50, color=blackyellow[k], ha ='right')
     #plt.rcParams.update({"font.size": 16})
-    xposition = 0
+    xposition = 328
     # xposition = 328   #328 is 90km to the east
     xposition2 = 310
 
@@ -2144,6 +2144,8 @@ for k in range(inicio,final,1):     #usually start at 0
     # #plt.contourf(xm,zm,B[k,:,0,:],np.arange(-0.5,0.52,0.02),cmap='seismic')
     # plt.contourf(xm,zh[0,:,0,:]/1000.0,B[k,:,0,:],np.arange(-0.5,0.52,0.02),cmap='seismic')
     # plt.plot([xh[328],xh[328]],[0,100],linestyle="dashed",color="k")
+    # plt.plot([xh[310],xh[310]],[0,100],linestyle="dashed",color="k")
+    # plt.plot([xh[319],xh[319]],[0,100],linestyle="dashed",color="k")
     # #plt.pcolormesh(xm,zm,B[k,:,0,:],cmap=bwr_custom_thpert,vmin=-0.4, vmax=0.4)
     # #plt.pcolormesh(xm,zh[0,:,0,:]/1000.0,B[k,:,0,:],cmap=bwr_custom_thpert,vmin=-0.4, vmax=0.4)
     # cbar = plt.colorbar()
@@ -2155,7 +2157,7 @@ for k in range(inicio,final,1):     #usually start at 0
     # ax.set_xlim([-1000,1000])
     # ax.set_ylim([0,5])
     # ax.tick_params('both', length=15, width=2, which='major')
-    # plt.subplots_adjust(bottom=0.07, top=0.93, hspace=0.2, right=0.9)
+    # plt.subplots_adjust(bottom=0.12, top=0.97, hspace=0.2, right=0.9)
 
 #    plt.subplot(2,1,2)
 #    plt.contourf(xm,zh[0,:,0,:],P[k,:,0,:]-P[0,:,0,:],np.arange(-350,350,10),cmap='seismic')
@@ -2267,7 +2269,7 @@ for k in range(inicio,final,1):     #usually start at 0
 # #    ax.set_xlim([-2968,2968])
     
     
-    ax=fig.add_subplot(2,2,1)
+    ax=fig.add_subplot(2,2,2)
     plt.plot(u[k,:,0,xposition],z,linewidth=3,color="crimson")
     #plt.title(time2[k] + '     ' +str(int(solrad[k,0,0])) ,name='Arial',weight='bold',size=20)
     # plt.title(time2[k],name='Arial',size=20)
@@ -2279,25 +2281,25 @@ for k in range(inicio,final,1):     #usually start at 0
     plt.grid(True)
     
     
-    # ax=fig.add_subplot(2,2,1)
-    # plt.plot(u[k,:,0,xposition2],z,linewidth=3,color="crimson")
-    # #plt.title(time2[k] + '     ' +str(int(solrad[k,0,0])) ,name='Arial',weight='bold',size=20)
-    # plt.xlabel(r'u (m $\rms^{-1}$) ',size=30)
-    # plt.ylabel('z (km)',size=30)
-    # ax.set_xlim([-10,20])
-    # ax.set_ylim([0,4])
-    # ax.tick_params('both', length=15, width=2, which='major')
-    # plt.grid(True)
-    
-    ax=fig.add_subplot(2,2,2)
-    plt.plot(v[k,:,0,xposition],z,linewidth=3,color="crimson")
+    ax=fig.add_subplot(2,2,1)
+    plt.plot(u[k,:,0,xposition2],z,linewidth=3,color="crimson")
     #plt.title(time2[k] + '     ' +str(int(solrad[k,0,0])) ,name='Arial',weight='bold',size=20)
-    plt.xlabel(r'v (m $\rms^{-1}$)',size=30)
+    plt.xlabel(r'u (m $\rms^{-1}$) ',size=30)
     plt.ylabel('z (km)',size=30)
     ax.set_xlim([-10,20])
     ax.set_ylim([0,4])
     ax.tick_params('both', length=15, width=2, which='major')
     plt.grid(True)
+    
+    # ax=fig.add_subplot(2,2,2)
+    # plt.plot(v[k,:,0,xposition],z,linewidth=3,color="crimson")
+    # #plt.title(time2[k] + '     ' +str(int(solrad[k,0,0])) ,name='Arial',weight='bold',size=20)
+    # plt.xlabel(r'v (m $\rms^{-1}$)',size=30)
+    # plt.ylabel('z (km)',size=30)
+    # ax.set_xlim([-10,20])
+    # ax.set_ylim([0,4])
+    # ax.tick_params('both', length=15, width=2, which='major')
+    # plt.grid(True)
     
     #Wind speed profile
     # ax=fig.add_subplot(1,1,1)
@@ -2328,7 +2330,7 @@ for k in range(inicio,final,1):     #usually start at 0
     # ax.set_xlim([-0.0015,0.0015])
     # ax.set_ylim([0,5])
     
-    ax=fig.add_subplot(2,2,3)
+    ax=fig.add_subplot(2,2,4)
     plt.plot(upblten[k,:,0,xposition],z,label='Turbulence',linewidth=2)
     plt.plot(fcoru[k,:,0,xposition] - initPGF[k,:,0,xposition],z,label='Coriolis + init PGF',linewidth=2)
     plt.plot(PGFpertuPi[k,:,0,xposition],z,label='PPGF',linewidth=2)
@@ -2338,7 +2340,7 @@ for k in range(inicio,final,1):     #usually start at 0
     plt.plot(uidiff[k,:,0,xposition],z,label='Artificial diffusion',linewidth=2)
     # plt.plot(uhturb[k,:,0,xposition],z,label='Horizontal Turbulence')
     # plt.plot(uvturb[k,:,0,xposition],z,label='Vertical Turbulence')
-    #plt.legend(fontsize=17)
+    plt.legend(fontsize=17)
     #plt.title(time2[k] + '     ' +str(int(solrad[k,0,0])) ,name='Arial',weight='bold',size=20)
     plt.xlabel(r'u-eqn terms (m $\rms^{-2}$)',size=30)
     plt.ylabel('z (km)',size=30)
@@ -2349,48 +2351,48 @@ for k in range(inicio,final,1):     #usually start at 0
     ax.xaxis.get_offset_text().set_fontsize(fontsize=30)
     plt.grid(True)
     
-    # ax=fig.add_subplot(2,2,3)
-    # plt.plot(upblten[k,:,0,xposition2],z,label='Turbulence',linewidth=2)
-    # plt.plot(fcoru[k,:,0,xposition2] - initPGF[k,:,0,xposition],z,label='Coriolis + init PGF',linewidth=2)
-    # plt.plot(PGFpertuPi[k,:,0,xposition2],z,label='PPGF',linewidth=2)
-    # plt.plot(urdamp[k,:,0,xposition2],z,label='Rayleigh Damping',linewidth=2)
-    # plt.plot(hadvu[k,:,0,xposition2],z,label='Horiz advection',linewidth=2)
-    # plt.plot(vadvu[k,:,0,xposition2],z,label='Vertical advection',linewidth=2)
-    # plt.plot(uidiff[k,:,0,xposition2],z,label='Artificial diffusion',linewidth=2)
-    # # plt.plot(uhturb[k,:,0,xposition],z,label='Horizontal Turbulence')
-    # # plt.plot(uvturb[k,:,0,xposition],z,label='Vertical Turbulence')
-    # #plt.legend(fontsize=17)
-    # #plt.title(time2[k] + '     ' +str(int(solrad[k,0,0])) ,name='Arial',weight='bold',size=20)
-    # plt.xlabel(r'u-eqn terms (m $\rms^{-2}$)',size=30)
-    # plt.ylabel('z (km)',name='Arial',size=30)
-    # ax.set_xlim([-0.0015,0.0015])
-    # ax.set_ylim([0,4])
-    # ax.tick_params('both', length=15, width=2, which='major')
-    # ax.ticklabel_format(axis='both', style='sci',scilimits=(0,0),useMathText=True)
-    # ax.xaxis.get_offset_text().set_fontsize(fontsize=30)
-    # plt.grid(True)
-    
-    
-    ax=fig.add_subplot(2,2,4)
-    plt.plot(vpblten[k,:,0,xposition],z,label='Turbulence',linewidth=2)
-    plt.plot(fcorv[k,:,0,xposition],z,label='Coriolis + init PGF',linewidth=2)
-    plt.plot(PGFpertvPi[k,:,0,xposition],z,label='PPGF',linewidth=2)
-    plt.plot(vrdamp[k,:,0,xposition],z,label='Rayleigh Damping',linewidth=2)
-    plt.plot(hadvv[k,:,0,xposition],z,label='Horiz advection',linewidth=2)
-    plt.plot(vadvv[k,:,0,xposition],z,label='Vertical advection',linewidth=2)
-    plt.plot(vidiff[k,:,0,xposition],z,label='Artificial diffusion',linewidth=2)
+    ax=fig.add_subplot(2,2,3)
+    plt.plot(upblten[k,:,0,xposition2],z,label='Turbulence',linewidth=2)
+    plt.plot(fcoru[k,:,0,xposition2] - initPGF[k,:,0,xposition],z,label='Coriolis + init PGF',linewidth=2)
+    plt.plot(PGFpertuPi[k,:,0,xposition2],z,label='PPGF',linewidth=2)
+    plt.plot(urdamp[k,:,0,xposition2],z,label='Rayleigh Damping',linewidth=2)
+    plt.plot(hadvu[k,:,0,xposition2],z,label='Horiz advection',linewidth=2)
+    plt.plot(vadvu[k,:,0,xposition2],z,label='Vertical advection',linewidth=2)
+    plt.plot(uidiff[k,:,0,xposition2],z,label='Artificial diffusion',linewidth=2)
     # plt.plot(uhturb[k,:,0,xposition],z,label='Horizontal Turbulence')
     # plt.plot(uvturb[k,:,0,xposition],z,label='Vertical Turbulence')
-    plt.legend(fontsize=17)
+    #plt.legend(fontsize=17)
     #plt.title(time2[k] + '     ' +str(int(solrad[k,0,0])) ,name='Arial',weight='bold',size=20)
-    plt.xlabel(r'v-eqn terms (m $\rms^{-2}$)',size=30)
-    plt.ylabel('z (km)',size=30)
+    plt.xlabel(r'u-eqn terms (m $\rms^{-2}$)',size=30)
+    plt.ylabel('z (km)',name='Arial',size=30)
     ax.set_xlim([-0.0015,0.0015])
     ax.set_ylim([0,4])
     ax.tick_params('both', length=15, width=2, which='major')
     ax.ticklabel_format(axis='both', style='sci',scilimits=(0,0),useMathText=True)
     ax.xaxis.get_offset_text().set_fontsize(fontsize=30)
     plt.grid(True)
+    
+    
+    # ax=fig.add_subplot(2,2,4)
+    # plt.plot(vpblten[k,:,0,xposition],z,label='Turbulence',linewidth=2)
+    # plt.plot(fcorv[k,:,0,xposition],z,label='Coriolis + init PGF',linewidth=2)
+    # plt.plot(PGFpertvPi[k,:,0,xposition],z,label='PPGF',linewidth=2)
+    # plt.plot(vrdamp[k,:,0,xposition],z,label='Rayleigh Damping',linewidth=2)
+    # plt.plot(hadvv[k,:,0,xposition],z,label='Horiz advection',linewidth=2)
+    # plt.plot(vadvv[k,:,0,xposition],z,label='Vertical advection',linewidth=2)
+    # plt.plot(vidiff[k,:,0,xposition],z,label='Artificial diffusion',linewidth=2)
+    # # plt.plot(uhturb[k,:,0,xposition],z,label='Horizontal Turbulence')
+    # # plt.plot(uvturb[k,:,0,xposition],z,label='Vertical Turbulence')
+    # plt.legend(fontsize=17)
+    # #plt.title(time2[k] + '     ' +str(int(solrad[k,0,0])) ,name='Arial',weight='bold',size=20)
+    # plt.xlabel(r'v-eqn terms (m $\rms^{-2}$)',size=30)
+    # plt.ylabel('z (km)',size=30)
+    # ax.set_xlim([-0.0015,0.0015])
+    # ax.set_ylim([0,4])
+    # ax.tick_params('both', length=15, width=2, which='major')
+    # ax.ticklabel_format(axis='both', style='sci',scilimits=(0,0),useMathText=True)
+    # ax.xaxis.get_offset_text().set_fontsize(fontsize=30)
+    # plt.grid(True)
     
     
     
@@ -2806,12 +2808,12 @@ for k in range(inicio,final,1):     #usually start at 0
 
     
     
-    #plt.subplots_adjust(bottom=0.13, top=0.98, hspace=0.35,right=0.98,left=0.07)
+    plt.subplots_adjust(bottom=0.13, top=0.98, hspace=0.35,right=0.98,left=0.07)
     #plt.subplots_adjust(bottom=0.07, top=0.93, hspace=0.2, right=0.745)
     plt.pause(0.5)
     nameoffigure = time2[k] #+ "0"
     string_in_string = "{}".format(nameoffigure)
-    plt.savefig("/home/owner/Documents/LLJConvection/cm1model/figures/"+string_in_string,dpi=100)
+    plt.savefig("/home/owner/Documents/LLJConvection/cm1model/figures/"+string_in_string,dpi=300)
     plt.close()
     
     
